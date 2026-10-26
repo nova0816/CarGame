@@ -523,27 +523,6 @@
       </div>
     </div>
 
-    <!-- Quick Car Tilt Calibration Bar directly on Home -->
-    <div class="sensitivity-card">
-      <div class="sensitivity-header">
-        <span class="sensitivity-title">🚗 車用傾斜靈敏度</span>
-        <span class="sensitivity-badge" id="home-tilt-badge">48°</span>
-      </div>
-      <div class="slider-container">
-        <input type="range" id="home-tilt-slider" min="25" max="65" value="48" step="1" oninput="updateTiltThreshold(this.value)">
-        <div class="slider-labels">
-          <span>靈敏 (25°)</span>
-          <span>車用推薦 (48°)</span>
-          <span>大角度 (65°)</span>
-        </div>
-      </div>
-      <div class="preset-row">
-        <button type="button" class="btn-preset" id="home-preset-desk" onclick="setPreset(30)">書桌 (30°)</button>
-        <button type="button" class="btn-preset active" id="home-preset-car" onclick="setPreset(48)">🚗 車用 (48°)</button>
-        <button type="button" class="btn-preset" id="home-preset-bumpy" onclick="setPreset(58)">顛簸路面 (58°)</button>
-      </div>
-    </div>
-
     <div class="home-footer-info">
       <span>🛡️ 零螢幕眩光干擾 • 專注於聽力練習</span>
     </div>
@@ -767,7 +746,7 @@
     // =========================================================
     let currentView = "home"; // "home" | "game" | "test"
     let currentGameMode = "english"; // "english" | "multiplication_zh"
-    let tiltAngleThreshold = parseInt(localStorage.getItem('carGame_tiltThreshold')) || 48;
+    const TILT_ANGLE_THRESHOLD = 65; // Fixed 65 degrees for all games
     const SHAKE_THRESHOLD = 17;
     const COOLDOWN_MS = 1400;
 
@@ -795,8 +774,6 @@
     const arrowRight = document.getElementById('arrow-right');
 
     // DOM Elements - Sensitivity Controls
-    const homeTiltSlider = document.getElementById('home-tilt-slider');
-    const homeTiltBadge = document.getElementById('home-tilt-badge');
 
     // DOM Elements - Testing View
     const testDisplayCard = document.getElementById('test-display-card');
@@ -811,7 +788,7 @@
     const valThreshold = document.getElementById('val-threshold');
 
     // Initialize Sensitivity
-    syncSensitivityUI(tiltAngleThreshold);
+valThreshold.textContent = "±65°";
 
     function shuffle(arr) {
       return [...arr].sort(() => 0.5 - Math.random());
@@ -1159,11 +1136,11 @@
       // --- GAME MODE (TILTING ONLY) ---
       if (currentView === 'game') {
         if (!isGameLocked && hasReturnedToCenter) {
-          if (gamma < -tiltAngleThreshold) {
+          if (gamma < -TILT_ANGLE_THRESHOLD) {
             hasReturnedToCenter = false;
             arrowLeft.classList.add('active-tilt');
             evaluateAnswer('left');
-          } else if (gamma > tiltAngleThreshold) {
+          } else if (gamma > TILT_ANGLE_THRESHOLD) {
             hasReturnedToCenter = false;
             arrowRight.classList.add('active-tilt');
             evaluateAnswer('right');
@@ -1188,9 +1165,9 @@
           return;
         }
 
-        if (gamma < -tiltAngleThreshold) {
+        if (gamma < -TILT_ANGLE_THRESHOLD) {
           triggerTestAction("Tilt Left!", "向左傾斜", "⬅️");
-        } else if (gamma > tiltAngleThreshold) {
+        } else if (gamma > TILT_ANGLE_THRESHOLD) {
           triggerTestAction("Tilt Right!", "向右傾斜", "➡️");
         }
       }
@@ -1265,41 +1242,6 @@
         isCoolingDown = false;
         testDisplayCard.classList.remove('active');
       }, COOLDOWN_MS);
-    }
-
-    // =========================================================
-    // 8. SENSITIVITY CALIBRATION
-    // =========================================================
-    function updateTiltThreshold(val) {
-      tiltAngleThreshold = parseInt(val, 10);
-      localStorage.setItem('carGame_tiltThreshold', tiltAngleThreshold);
-      syncSensitivityUI(tiltAngleThreshold);
-    }
-
-    function setPreset(val) {
-      updateTiltThreshold(val);
-    }
-
-    function syncSensitivityUI(val) {
-      homeTiltSlider.value = val;
-      homeTiltBadge.textContent = val + '°';
-      valThreshold.textContent = `±${val}°`;
-
-      const isDesk = val === 30;
-      const isCar = val === 48;
-      const isBumpy = val === 58;
-
-      updateBtnClass('home-preset-desk', isDesk);
-      updateBtnClass('home-preset-car', isCar);
-      updateBtnClass('home-preset-bumpy', isBumpy);
-    }
-
-    function updateBtnClass(id, isActive) {
-      const el = document.getElementById(id);
-      if (el) {
-        if (isActive) el.classList.add('active');
-        else el.classList.remove('active');
-      }
     }
 
     function testVoice() {
