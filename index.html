@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Motion & Tilt Voice Detector</title>
+  <title>Car Rider ESL - In-Car Listening Game</title>
   <style>
     * {
       box-sizing: border-box;
@@ -11,46 +11,365 @@
       padding: 0;
       user-select: none;
       -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       background-color: #0f172a;
-      color: #f8fafc;
+      color: #e2e8f0;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1.2rem;
-      text-align: center;
       overflow-x: hidden;
     }
 
-    header {
-      margin-top: 0.5rem;
+    /* Common View Styles */
+    .view {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 100vh;
+      padding: 1.2rem;
+      text-align: center;
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
     }
 
-    h1 {
-      font-size: 1.6rem;
-      font-weight: 800;
-      color: #38bdf8;
-      margin-bottom: 0.2rem;
+    .view.active {
+      display: flex;
     }
 
-    p.subtitle {
+    /* Top Navigation Bar */
+    .nav-bar {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.2rem 0;
+    }
+
+    .btn-nav-back {
+      background: #334155;
+      color: #cbd5e1;
+      border: 1px solid #475569;
+      border-radius: 9999px;
+      padding: 0.45rem 0.9rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .nav-title {
       font-size: 0.9rem;
       color: #94a3b8;
+      font-weight: 600;
     }
 
-    /* Big Status Display */
+    /* =========================================
+       1. HOME VIEW (Option Selector)
+       ========================================= */
+    .home-header {
+      margin-top: 1.5rem;
+    }
+
+    .app-icon {
+      font-size: 4rem;
+      line-height: 1;
+      margin-bottom: 0.8rem;
+    }
+
+    .home-title {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #38bdf8;
+      margin-bottom: 0.4rem;
+      letter-spacing: -0.5px;
+    }
+
+    .home-subtitle {
+      font-size: 0.95rem;
+      color: #94a3b8;
+      line-height: 1.4;
+      max-width: 340px;
+      margin: 0 auto;
+    }
+
+    .menu-options-container {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      margin: 2rem 0;
+    }
+
+    .menu-card {
+      background: #1e293b;
+      border: 2px solid #334155;
+      border-radius: 22px;
+      padding: 1.4rem;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .menu-card:active {
+      transform: scale(0.98);
+    }
+
+    .menu-card.primary {
+      border-color: #0284c7;
+      background: linear-gradient(145deg, #1e293b, #0f2847);
+      box-shadow: 0 10px 25px rgba(2, 132, 199, 0.25);
+    }
+
+    .menu-card-icon {
+      font-size: 2.8rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .menu-card-info h2 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #f8fafc;
+      margin-bottom: 0.25rem;
+    }
+
+    .menu-card-info p {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      line-height: 1.3;
+    }
+
+    .badge-recommend {
+      background: #0284c7;
+      color: #ffffff;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.15rem 0.5rem;
+      border-radius: 6px;
+      margin-left: 0.4rem;
+      vertical-align: middle;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .home-footer-info {
+      font-size: 0.8rem;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    /* =========================================
+       2. GAME VIEW (Calm, Minimalist, Audio-First)
+       ========================================= */
+    /* Low visual stimulation: dark, clean, no flashy distraction */
+    #game-view {
+      cursor: pointer; /* Whole screen is clickable to repeat audio */
+    }
+
+    .game-status-bar {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      color: #94a3b8;
+      font-weight: 600;
+      padding: 0 0.2rem;
+    }
+
+    .score-badge {
+      background: #334155;
+      color: #38bdf8;
+      padding: 0.3rem 0.75rem;
+      border-radius: 9999px;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    /* Question Box - Simple, readable, not flashy */
+    .question-box {
+      width: 100%;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 20px;
+      padding: 1.8rem 1.4rem;
+      margin: 1rem 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 180px;
+      position: relative;
+    }
+
+    .question-prompt {
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: #f1f5f9;
+      line-height: 1.4;
+      margin-bottom: 0.8rem;
+    }
+
+    .voice-subtext {
+      font-size: 0.95rem;
+      color: #94a3b8;
+      font-weight: 500;
+    }
+
+    .speaking-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      color: #38bdf8;
+      margin-top: 0.6rem;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .speaking-indicator.active {
+      opacity: 1;
+    }
+
+    .sound-wave {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #38bdf8;
+      animation: pulseWave 1s infinite alternate ease-in-out;
+    }
+
+    @keyframes pulseWave {
+      0% { transform: scale(0.8); opacity: 0.4; }
+      100% { transform: scale(1.6); opacity: 1; }
+    }
+
+    /* Left / Right Options Layout */
+    .options-split {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 0.5rem 0 1rem 0;
+    }
+
+    .option-btn {
+      background: #1e293b;
+      border: 2px solid #334155;
+      border-radius: 18px;
+      padding: 1.4rem 0.8rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .option-btn.left {
+      border-color: #334155;
+    }
+
+    .option-btn.right {
+      border-color: #334155;
+    }
+
+    /* Active Highlight during Tilt */
+    .option-btn.tilted {
+      border-color: #38bdf8;
+      background: #1e3a5f;
+      transform: scale(1.04);
+      box-shadow: 0 0 25px rgba(56, 189, 248, 0.35);
+    }
+
+    .option-btn.correct-highlight {
+      border-color: #22c55e;
+      background: rgba(34, 197, 94, 0.15);
+    }
+
+    .option-btn.wrong-highlight {
+      border-color: #ef4444;
+      background: rgba(239, 68, 68, 0.15);
+    }
+
+    .option-direction {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .option-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #f8fafc;
+    }
+
+    /* Steering Tilt Visual Feedback */
+    .tilt-guide {
+      width: 100%;
+      background: #1e293b;
+      border-radius: 14px;
+      padding: 0.6rem 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-bottom: 0.6rem;
+    }
+
+    .tilt-car-icon {
+      font-size: 1.4rem;
+      transition: transform 0.15s ease-out;
+      display: inline-block;
+    }
+
+    /* Bottom Prompt - Tap to Repeat */
+    .tap-repeat-banner {
+      width: 100%;
+      background: #1e293b;
+      border: 1px dashed #475569;
+      border-radius: 14px;
+      padding: 0.85rem;
+      font-size: 0.85rem;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .tap-repeat-banner strong {
+      color: #38bdf8;
+    }
+
+    /* =========================================
+       3. TESTING VIEW (Calibration & Sensor Tools)
+       ========================================= */
     .display-card {
       background: #1e293b;
       border: 3px solid #334155;
-      border-radius: 28px;
+      border-radius: 26px;
       width: 100%;
-      max-width: 420px;
-      height: 270px;
+      height: 250px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -64,26 +383,24 @@
     .display-card.active {
       border-color: #38bdf8;
       box-shadow: 0 0 35px rgba(56, 189, 248, 0.5);
-      transform: scale(1.03);
+      transform: scale(1.02);
     }
 
     .motion-icon {
-      font-size: 4.8rem;
+      font-size: 4.5rem;
       line-height: 1;
       margin-bottom: 0.6rem;
-      transition: transform 0.2s ease;
     }
 
     .motion-text {
-      font-size: 1.7rem;
+      font-size: 1.6rem;
       font-weight: 700;
       color: #f1f5f9;
-      letter-spacing: 0.5px;
     }
 
     .cooldown-bar-container {
       width: 80%;
-      height: 8px;
+      height: 7px;
       background: #334155;
       border-radius: 4px;
       margin-top: 1rem;
@@ -97,28 +414,26 @@
       transition: width 0.1s linear;
     }
 
-    /* Sensitivity Card (Inside Start Screen & Modal) */
+    /* Sensitivity Settings Card */
     .sensitivity-card {
       background: #1e293b;
       border: 2px solid #334155;
-      border-radius: 20px;
+      border-radius: 18px;
       width: 100%;
-      max-width: 380px;
-      padding: 1.2rem 1.4rem;
-      margin: 1.2rem 0;
+      padding: 1rem 1.2rem;
+      margin: 0.8rem 0;
       text-align: left;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
     }
 
     .sensitivity-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 0.6rem;
+      margin-bottom: 0.5rem;
     }
 
     .sensitivity-title {
-      font-size: 1rem;
+      font-size: 0.95rem;
       font-weight: 700;
       color: #f8fafc;
       display: flex;
@@ -129,18 +444,17 @@
     .sensitivity-badge {
       background: #0284c7;
       color: white;
-      font-size: 1.1rem;
+      font-size: 1rem;
       font-weight: 800;
-      padding: 0.2rem 0.65rem;
+      padding: 0.15rem 0.6rem;
       border-radius: 9999px;
       font-family: monospace;
     }
 
     .slider-container {
-      margin: 0.8rem 0 0.4rem 0;
+      margin: 0.6rem 0 0.3rem 0;
     }
 
-    /* Custom Range Slider */
     input[type=range] {
       -webkit-appearance: none;
       width: 100%;
@@ -148,24 +462,13 @@
       border-radius: 5px;
       background: #334155;
       outline: none;
-      transition: background 0.2s;
     }
 
     input[type=range]::-webkit-slider-thumb {
       -webkit-appearance: none;
       appearance: none;
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #38bdf8, #0284c7);
-      cursor: pointer;
-      box-shadow: 0 0 10px rgba(56, 189, 248, 0.7);
-      border: 2px solid white;
-    }
-
-    input[type=range]::-moz-range-thumb {
-      width: 28px;
-      height: 28px;
+      width: 26px;
+      height: 26px;
       border-radius: 50%;
       background: linear-gradient(135deg, #38bdf8, #0284c7);
       cursor: pointer;
@@ -178,24 +481,24 @@
       justify-content: space-between;
       font-size: 0.75rem;
       color: #64748b;
-      margin-top: 0.3rem;
+      margin-top: 0.25rem;
     }
 
     .sensitivity-hint {
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       color: #38bdf8;
       background: rgba(56, 189, 248, 0.1);
       border: 1px solid rgba(56, 189, 248, 0.25);
-      border-radius: 10px;
-      padding: 0.5rem 0.75rem;
-      margin-top: 0.75rem;
+      border-radius: 8px;
+      padding: 0.45rem 0.65rem;
+      margin-top: 0.6rem;
       line-height: 1.35;
     }
 
     .preset-row {
       display: flex;
-      gap: 0.5rem;
-      margin-top: 0.85rem;
+      gap: 0.4rem;
+      margin-top: 0.7rem;
     }
 
     .btn-preset {
@@ -204,113 +507,31 @@
       color: #cbd5e1;
       border: 1px solid #475569;
       border-radius: 8px;
-      padding: 0.45rem 0.2rem;
-      font-size: 0.78rem;
+      padding: 0.4rem 0.2rem;
+      font-size: 0.75rem;
       font-weight: 600;
       cursor: pointer;
       text-align: center;
-      transition: all 0.15s;
     }
 
     .btn-preset.active {
       background: #0369a1;
       color: #ffffff;
       border-color: #38bdf8;
-      box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
     }
 
-    /* Start / Permission Overlay */
-    #start-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(15, 23, 42, 0.98);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 100;
-      padding: 1.5rem 1.2rem;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    .btn-start {
-      background: linear-gradient(135deg, #0284c7, #2563eb);
-      color: white;
-      font-size: 1.5rem;
-      font-weight: 800;
-      border: none;
-      border-radius: 9999px;
-      padding: 1.1rem 3.2rem;
-      cursor: pointer;
-      box-shadow: 0 10px 25px rgba(37, 99, 235, 0.5);
-      transition: transform 0.1s, box-shadow 0.1s;
-      margin-top: 0.6rem;
-    }
-
-    .btn-start:active {
-      transform: scale(0.96);
-    }
-
-    /* Modal for On-the-fly Adjustment */
-    #settings-modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(4px);
-      z-index: 200;
-      align-items: center;
-      justify-content: center;
-      padding: 1.5rem;
-    }
-
-    #settings-modal.show {
-      display: flex;
-    }
-
-    .modal-content {
-      background: #1e293b;
-      border: 2px solid #38bdf8;
-      border-radius: 24px;
-      width: 100%;
-      max-width: 400px;
-      padding: 1.5rem;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.6);
-    }
-
-    .btn-close-modal {
-      background: #0284c7;
-      color: white;
-      border: none;
-      width: 100%;
-      padding: 0.8rem;
-      border-radius: 12px;
-      font-size: 1rem;
-      font-weight: 700;
-      margin-top: 1rem;
-      cursor: pointer;
-    }
-
-    /* Sensor Debug Data */
+    /* Debug Box */
     .debug-box {
       background: #1e293b;
       border: 1px solid #334155;
       border-radius: 14px;
-      padding: 0.8rem 1rem;
+      padding: 0.75rem 1rem;
       font-family: monospace;
       font-size: 0.8rem;
       color: #94a3b8;
       width: 100%;
-      max-width: 420px;
       text-align: left;
-      margin-top: 0.8rem;
+      margin-top: 0.6rem;
     }
 
     .debug-row {
@@ -324,367 +545,668 @@
       font-weight: bold;
     }
 
-    /* Controls Toolbar */
-    .controls {
+    .controls-row {
       display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
       gap: 0.5rem;
       margin-top: 0.5rem;
       width: 100%;
-      max-width: 420px;
     }
 
-    .btn-pill {
+    .btn-action {
+      flex: 1;
       background: #334155;
       color: #cbd5e1;
       border: none;
-      padding: 0.55rem 0.95rem;
-      border-radius: 9999px;
+      padding: 0.6rem;
+      border-radius: 12px;
       font-size: 0.85rem;
       font-weight: 600;
       cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
     }
-
-    .btn-pill:active {
+    .btn-action:active {
       background: #475569;
     }
   </style>
 </head>
 <body>
 
-  <!-- Startup Screen with Sensitivity Adjustment -->
-  <div id="start-overlay">
-    <div style="font-size: 3.5rem; margin-bottom: 0.8rem;">🚗 🎮</div>
-    <h2 style="font-size: 1.7rem; font-weight: 800; margin-bottom: 0.3rem; color: #f8fafc;">Motion Detector</h2>
-    <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 0.6rem; max-width: 320px;">
-      Adjust sensitivity for the car ride, then tap Start:
-    </p>
+  <!-- =========================================
+       VIEW 1: HOME PAGE (Testing or Game)
+       ========================================= -->
+  <div id="home-view" class="view active">
+    <div class="home-header">
+      <div class="app-icon">🚗 🎧</div>
+      <h1 class="home-title">Car Rider English</h1>
+      <p class="home-subtitle">
+        In-car listening practice for kids.<br>Listen carefully and steer your answer!
+      </p>
+    </div>
 
-    <!-- Tilt Sensitivity Box -->
+    <div class="menu-options-container">
+      <!-- Option 1: Play Game -->
+      <div class="menu-card primary" onclick="launchGame()">
+        <div class="menu-card-icon">🎮</div>
+        <div class="menu-card-info">
+          <h2>Play Game <span class="badge-recommend">Kids</span></h2>
+          <p>Listening questions: tilt left for <strong>Yes</strong>, tilt right for <strong>No</strong>. Tap screen to repeat.</p>
+        </div>
+      </div>
+
+      <!-- Option 2: Motion Testing Environment -->
+      <div class="menu-card" onclick="launchTesting()">
+        <div class="menu-card-icon">🔧</div>
+        <div class="menu-card-info">
+          <h2>Testing Environment</h2>
+          <p>Test all motions (tilt, shake, flip), check real-time sensor degrees, and calibrate car sensitivity.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Car Tilt Calibration Bar directly on Home -->
     <div class="sensitivity-card">
       <div class="sensitivity-header">
-        <span class="sensitivity-title">🚗 Tilt Sensitivity</span>
-        <span class="sensitivity-badge" id="start-tilt-badge">48°</span>
+        <span class="sensitivity-title">🚗 Car Tilt Sensitivity</span>
+        <span class="sensitivity-badge" id="home-tilt-badge">48°</span>
       </div>
-
       <div class="slider-container">
-        <input type="range" id="start-tilt-slider" min="25" max="65" value="48" step="1" oninput="updateTiltThreshold(this.value)">
+        <input type="range" id="home-tilt-slider" min="25" max="65" value="48" step="1" oninput="updateTiltThreshold(this.value)">
         <div class="slider-labels">
           <span>Gentle (25°)</span>
-          <span>Balanced (45°)</span>
+          <span>Car Mode (48°)</span>
           <span>Deep Turn (65°)</span>
         </div>
       </div>
-
-      <div class="sensitivity-hint" id="start-tilt-hint">
-        ⭐ <strong>Car Mode (48°):</strong> Requires a deliberate steering wheel turn so normal road bumps won't trigger it!
-      </div>
-
       <div class="preset-row">
-        <button type="button" class="btn-preset" id="preset-desk-start" onclick="setPreset(30)">Desk (30°)</button>
-        <button type="button" class="btn-preset active" id="preset-car-start" onclick="setPreset(48)">🚗 Car (48°)</button>
-        <button type="button" class="btn-preset" id="preset-bumpy-start" onclick="setPreset(58)">Bumpy (58°)</button>
+        <button type="button" class="btn-preset" id="home-preset-desk" onclick="setPreset(30)">Desk (30°)</button>
+        <button type="button" class="btn-preset active" id="home-preset-car" onclick="setPreset(48)">🚗 Car (48°)</button>
+        <button type="button" class="btn-preset" id="home-preset-bumpy" onclick="setPreset(58)">Bumpy (58°)</button>
       </div>
     </div>
 
-    <button class="btn-start" id="btn-start" onclick="startApp()">Start</button>
-  </div>
-
-  <!-- Header -->
-  <header>
-    <h1>Motion Voice Tester</h1>
-    <p class="subtitle">Tilt like a steering wheel, shake, or flip</p>
-  </header>
-
-  <!-- Big Central Display -->
-  <div class="display-card" id="display-card">
-    <div class="motion-icon" id="motion-icon">📱</div>
-    <div class="motion-text" id="motion-text">Ready! Move phone...</div>
-    <div class="cooldown-bar-container">
-      <div class="cooldown-bar" id="cooldown-bar"></div>
+    <div class="home-footer-info">
+      <span>🛡️ Low-stimulation screen designed for car rides</span>
     </div>
   </div>
 
-  <!-- Main Controls -->
-  <div class="controls">
-    <button class="btn-pill" onclick="openSettingsModal()">
-      ⚙️ Tilt: <span id="btn-tilt-label" style="color: #38bdf8; font-weight: bold;">48°</span>
-    </button>
-    <button class="btn-pill" onclick="testVoice()">🔊 Test Voice</button>
-    <button class="btn-pill" onclick="toggleDebug()">📊 Sensor Data</button>
+  <!-- =========================================
+       VIEW 2: GAME VIEW (The In-Car Listening Game)
+       ========================================= -->
+  <div id="game-view" class="view" onclick="onGameScreenTap(event)">
+    <div class="nav-bar">
+      <button class="btn-nav-back" onclick="goToHome(event)">
+        ← Menu
+      </button>
+      <span class="nav-title" id="game-progress-label">Question 1 / 15</span>
+      <div class="score-badge" id="game-score-label">⭐ 0</div>
+    </div>
+
+    <!-- Question Box -->
+    <div class="question-box">
+      <div class="question-prompt" id="game-question-text">
+        "Is a pig bigger than a mouse?"
+      </div>
+      <div class="voice-subtext" id="game-options-spoken">
+        "Left for yes. Right for no."
+      </div>
+      <div class="speaking-indicator" id="speaking-indicator">
+        <span class="sound-wave"></span>
+        <span>Speaking...</span>
+      </div>
+    </div>
+
+    <!-- Two Big Buttons (Left / Right) -->
+    <div class="options-split">
+      <div class="option-btn left" id="btn-option-left" onclick="handleManualChoice(true, event)">
+        <span class="option-direction">⬅️ Tilt Left</span>
+        <span class="option-title" id="opt-left-label">YES</span>
+      </div>
+      <div class="option-btn right" id="btn-option-right" onclick="handleManualChoice(false, event)">
+        <span class="option-direction">Tilt Right ➡️</span>
+        <span class="option-title" id="opt-right-label">NO</span>
+      </div>
+    </div>
+
+    <!-- Steering Guide (Shows lean angle smoothly) -->
+    <div class="tilt-guide">
+      <span>⬅️ Steer Left</span>
+      <span class="tilt-car-icon" id="steering-car-icon">🚗</span>
+      <span>Steer Right ➡️</span>
+    </div>
+
+    <!-- Tap anywhere banner -->
+    <div class="tap-repeat-banner">
+      <span>🔊 <strong>Tap screen</strong> to hear the question again</span>
+    </div>
   </div>
 
-  <!-- Live Debug Panel -->
-  <div class="debug-box" id="debug-box" style="display: none;">
-    <div class="debug-row">
-      <span>Tilt Left/Right (Gamma):</span>
-      <span class="val-highlight" id="val-gamma">0°</span>
+  <!-- =========================================
+       VIEW 3: TESTING VIEW (Motion Diagnostic Tool)
+       ========================================= -->
+  <div id="test-view" class="view">
+    <div class="nav-bar">
+      <button class="btn-nav-back" onclick="goToHome()">
+        ← Menu
+      </button>
+      <span class="nav-title">Testing Environment</span>
+      <button class="btn-nav-back" onclick="testVoice()">
+        🔊 Voice
+      </button>
     </div>
-    <div class="debug-row">
-      <span>Current Tilt Threshold:</span>
-      <span class="val-highlight" id="val-threshold">±48°</span>
-    </div>
-    <div class="debug-row">
-      <span>Tilt Front/Back (Beta):</span>
-      <span class="val-highlight" id="val-beta">0°</span>
-    </div>
-    <div class="debug-row">
-      <span>Shake Left/Right (Acc X):</span>
-      <span class="val-highlight" id="val-accx">0</span>
-    </div>
-    <div class="debug-row">
-      <span>Shake Up/Down (Acc Y):</span>
-      <span class="val-highlight" id="val-accy">0</span>
-    </div>
-    <div class="debug-row">
-      <span>Gravity Z (Face up/down):</span>
-      <span class="val-highlight" id="val-gravz">0</span>
-    </div>
-  </div>
 
-  <!-- On-The-Fly Settings Modal -->
-  <div id="settings-modal" onclick="closeSettingsModal(event)">
-    <div class="modal-content" onclick="event.stopPropagation()">
-      <div class="sensitivity-header">
-        <span class="sensitivity-title">🚗 Adjust Tilt Sensitivity</span>
-        <span class="sensitivity-badge" id="modal-tilt-badge">48°</span>
+    <div class="display-card" id="test-display-card">
+      <div class="motion-icon" id="test-motion-icon">📱</div>
+      <div class="motion-text" id="test-motion-text">Ready! Move phone...</div>
+      <div class="cooldown-bar-container">
+        <div class="cooldown-bar" id="test-cooldown-bar"></div>
       </div>
+    </div>
 
-      <div class="slider-container">
-        <input type="range" id="modal-tilt-slider" min="25" max="65" value="48" step="1" oninput="updateTiltThreshold(this.value)">
-        <div class="slider-labels">
-          <span>Gentle (25°)</span>
-          <span>Balanced (45°)</span>
-          <span>Deep Turn (65°)</span>
-        </div>
+    <!-- Live Sensor Debug Table -->
+    <div class="debug-box" id="test-debug-box">
+      <div class="debug-row">
+        <span>Tilt Left/Right (Gamma):</span>
+        <span class="val-highlight" id="val-gamma">0°</span>
       </div>
-
-      <div class="sensitivity-hint" id="modal-tilt-hint">
-        ⭐ <strong>Car Mode (48°):</strong> Requires a deliberate steering wheel turn so normal road bumps won't trigger it!
+      <div class="debug-row">
+        <span>Current Tilt Threshold:</span>
+        <span class="val-highlight" id="val-threshold">±48°</span>
       </div>
-
-      <div class="preset-row">
-        <button type="button" class="btn-preset" id="preset-desk-modal" onclick="setPreset(30)">Desk (30°)</button>
-        <button type="button" class="btn-preset active" id="preset-car-modal" onclick="setPreset(48)">🚗 Car (48°)</button>
-        <button type="button" class="btn-preset" id="preset-bumpy-modal" onclick="setPreset(58)">Bumpy (58°)</button>
+      <div class="debug-row">
+        <span>Tilt Front/Back (Beta):</span>
+        <span class="val-highlight" id="val-beta">0°</span>
       </div>
+      <div class="debug-row">
+        <span>Shake Left/Right (Acc X):</span>
+        <span class="val-highlight" id="val-accx">0</span>
+      </div>
+      <div class="debug-row">
+        <span>Shake Up/Down (Acc Y):</span>
+        <span class="val-highlight" id="val-accy">0</span>
+      </div>
+      <div class="debug-row">
+        <span>Gravity Z (Face up/down):</span>
+        <span class="val-highlight" id="val-gravz">0</span>
+      </div>
+    </div>
 
-      <button class="btn-close-modal" onclick="closeSettingsModal()">Done</button>
+    <div class="controls-row">
+      <button class="btn-action" onclick="testVoice()">🔊 Test Voice</button>
+      <button class="btn-action" onclick="playRandomCelebrationSound()">🎵 Test Chime</button>
     </div>
   </div>
 
   <script>
-    // --- Configuration & Thresholds ---
-    // Load saved preference or default to 48 degrees (Car Friendly)
+    // =========================================================
+    // 1. DATA: 25 Age-Appropriate ESL Questions for 7-Year-Olds
+    // =========================================================
+    const QUESTIONS_BANK = [
+      { q: "Is a pig bigger than a mouse?", left: "YES", right: "NO", ans: true, expl: "A pig is much bigger than a mouse!" },
+      { q: "Can a bird fly in the sky?", left: "YES", right: "NO", ans: true, expl: "Birds have wings to fly high!" },
+      { q: "Does a cow drink coffee?", left: "YES", right: "NO", ans: false, expl: "Cows drink water, not coffee!" },
+      { q: "Is ice cream cold?", left: "YES", right: "NO", ans: true, expl: "Ice cream is very cold and sweet!" },
+      { q: "Can a fish walk on legs?", left: "YES", right: "NO", ans: false, expl: "Fish swim with fins, no legs!" },
+      { q: "Does a car have wheels?", left: "YES", right: "NO", ans: true, expl: "A car has four wheels!" },
+      { q: "Is an elephant very tiny?", left: "YES", right: "NO", ans: false, expl: "An elephant is huge, not tiny!" },
+      { q: "Do we sleep at night?", left: "YES", right: "NO", ans: true, expl: "We go to bed and sleep at night!" },
+      { q: "Can an apple swim in the pool?", left: "YES", right: "NO", ans: false, expl: "Apples cannot swim!" },
+      { q: "Does a dog bark woof woof?", left: "YES", right: "NO", ans: true, expl: "Dogs bark woof woof!" },
+      { q: "Is fire hot?", left: "YES", right: "NO", ans: true, expl: "Fire is very hot!" },
+      { q: "Can a cat climb a tree?", left: "YES", right: "NO", ans: true, expl: "Cats love climbing tall trees!" },
+      { q: "Is the sun cold like snow?", left: "YES", right: "NO", ans: false, expl: "The sun is hot and bright!" },
+      { q: "Do rabbits have long ears?", left: "YES", right: "NO", ans: true, expl: "Rabbits have two long ears!" },
+      { q: "Does candy grow on trees?", left: "YES", right: "NO", ans: false, expl: "Candy does not grow on trees!" },
+      { q: "Do we wear shoes on our feet?", left: "YES", right: "NO", ans: true, expl: "We wear shoes on our feet!" },
+      { q: "Can a turtle run faster than a car?", left: "YES", right: "NO", ans: false, expl: "Turtles walk very slowly!" },
+      { q: "Do ducks like swimming in water?", left: "YES", right: "NO", ans: true, expl: "Ducks love swimming in water!" },
+      { q: "Is a rock soft like a pillow?", left: "YES", right: "NO", ans: false, expl: "Rocks are hard, pillows are soft!" },
+      { q: "Is a giraffe very tall?", left: "YES", right: "NO", ans: true, expl: "Giraffes have very long necks!" },
+      { q: "Do fish breathe underwater?", left: "YES", right: "NO", ans: true, expl: "Fish breathe underwater!" },
+      { q: "Can a bicycle fly over the moon?", left: "YES", right: "NO", ans: false, expl: "Bicycles ride on the ground!" },
+      { q: "Is a lemon sour?", left: "YES", right: "NO", ans: true, expl: "Lemons are sour and yellow!" },
+      { q: "Do snakes have arms and legs?", left: "YES", right: "NO", ans: false, expl: "Snakes slither with no legs!" },
+      { q: "When you are thirsty, do you drink water?", left: "YES", right: "NO", ans: true, expl: "Water is great when you are thirsty!" }
+    ];
+
+    // Celebratory spoken phrases (varied)
+    const PRAISES = [
+      "Bingo!",
+      "Super!",
+      "Awesome!",
+      "Great job!",
+      "You got it!",
+      "Wonderful!",
+      "Spot on!"
+    ];
+
+    // =========================================================
+    // 2. STATE & CONFIGURATION
+    // =========================================================
+    let currentView = "home"; // "home" | "game" | "test"
     let tiltAngleThreshold = parseInt(localStorage.getItem('carGame_tiltThreshold')) || 48;
-    const SHAKE_THRESHOLD = 17;           // Force for shake (m/s^2)
-    const COOLDOWN_MS = 1400;              // Cooldown between voice detections
+    const SHAKE_THRESHOLD = 17;
+    const COOLDOWN_MS = 1400;
 
-    let isAppStarted = false;
+    let isSensorsListening = false;
     let isCoolingDown = false;
-    let lastSpokenText = "";
-    let synth = window.speechSynthesis;
+    let isGameLocked = false; // Prevents double answers during transition
+    let hasReturnedToCenter = true; // Must return upright before next tilt can trigger
 
-    // UI Elements
-    const displayCard = document.getElementById('display-card');
-    const motionIcon = document.getElementById('motion-icon');
-    const motionText = document.getElementById('motion-text');
-    const cooldownBar = document.getElementById('cooldown-bar');
-    const startOverlay = document.getElementById('start-overlay');
-    const settingsModal = document.getElementById('settings-modal');
+    // Game Session State
+    let gameQuestions = [];
+    let currentQuestionIndex = 0;
+    let gameScore = 0;
 
-    // Sensitivity UI
-    const startTiltSlider = document.getElementById('start-tilt-slider');
-    const startTiltBadge = document.getElementById('start-tilt-badge');
-    const startTiltHint = document.getElementById('start-tilt-hint');
-    const modalTiltSlider = document.getElementById('modal-tilt-slider');
-    const modalTiltBadge = document.getElementById('modal-tilt-badge');
-    const modalTiltHint = document.getElementById('modal-tilt-hint');
-    const btnTiltLabel = document.getElementById('btn-tilt-label');
-    const valThreshold = document.getElementById('val-threshold');
+    // Speech & Audio
+    const synth = window.speechSynthesis;
+    let audioCtx = null;
 
-    // Debug elements
+    // DOM Elements - Navigation & Views
+    const homeView = document.getElementById('home-view');
+    const gameView = document.getElementById('game-view');
+    const testView = document.getElementById('test-view');
+
+    // DOM Elements - Game
+    const gameProgressLabel = document.getElementById('game-progress-label');
+    const gameScoreLabel = document.getElementById('game-score-label');
+    const gameQuestionText = document.getElementById('game-question-text');
+    const gameOptionsSpoken = document.getElementById('game-options-spoken');
+    const speakingIndicator = document.getElementById('speaking-indicator');
+    const btnOptionLeft = document.getElementById('btn-option-left');
+    const btnOptionRight = document.getElementById('btn-option-right');
+    const steeringCarIcon = document.getElementById('steering-car-icon');
+
+    // DOM Elements - Sensitivity
+    const homeTiltSlider = document.getElementById('home-tilt-slider');
+    const homeTiltBadge = document.getElementById('home-tilt-badge');
+
+    // DOM Elements - Testing
+    const testDisplayCard = document.getElementById('test-display-card');
+    const testMotionIcon = document.getElementById('test-motion-icon');
+    const testMotionText = document.getElementById('test-motion-text');
+    const testCooldownBar = document.getElementById('test-cooldown-bar');
     const valGamma = document.getElementById('val-gamma');
     const valBeta = document.getElementById('val-beta');
     const valAccX = document.getElementById('val-accx');
     const valAccY = document.getElementById('val-accy');
     const valGravZ = document.getElementById('val-gravz');
+    const valThreshold = document.getElementById('val-threshold');
 
-    // Initialize Sensitivity UI on page load
+    // Initialize Sensitivity Controls
     syncSensitivityUI(tiltAngleThreshold);
 
-    function updateTiltThreshold(val) {
-      tiltAngleThreshold = parseInt(val, 10);
-      localStorage.setItem('carGame_tiltThreshold', tiltAngleThreshold);
-      syncSensitivityUI(tiltAngleThreshold);
+    // =========================================================
+    // 3. WEB AUDIO API - VARIED PROCEDURAL SOUND EFFECTS
+    // =========================================================
+    function getAudioContext() {
+      if (!audioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) {
+          audioCtx = new AudioContextClass();
+        }
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
     }
 
-    function setPreset(val) {
-      updateTiltThreshold(val);
+    // Play a single clean synthesized chime tone
+    function playTone(freq, type = 'sine', startTime = 0, duration = 0.35, gainLevel = 0.3) {
+      const ctx = getAudioContext();
+      if (!ctx) return;
+
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, ctx.currentTime + startTime);
+
+      gain.gain.setValueAtTime(gainLevel, ctx.currentTime + startTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + startTime + duration);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(ctx.currentTime + startTime);
+      osc.stop(ctx.currentTime + startTime + duration + 0.05);
     }
 
-    function syncSensitivityUI(val) {
-      // Sliders & Badges
-      startTiltSlider.value = val;
-      modalTiltSlider.value = val;
-      startTiltBadge.textContent = val + '°';
-      modalTiltBadge.textContent = val + '°';
-      btnTiltLabel.textContent = val + '°';
-      valThreshold.textContent = `±${val}°`;
+    // 5 VARIED CELEBRATION SOUNDS:
+    function playRandomCelebrationSound() {
+      const choice = Math.floor(Math.random() * 5);
+      switch(choice) {
+        case 0:
+          // Sound 1: Bright Major Arpeggio (C5 -> E5 -> G5 -> C6)
+          playTone(523.25, 'triangle', 0.0, 0.25, 0.35); // C5
+          playTone(659.25, 'triangle', 0.1, 0.25, 0.35); // E5
+          playTone(783.99, 'triangle', 0.2, 0.25, 0.35); // G5
+          playTone(1046.50, 'sine', 0.32, 0.5, 0.4);     // C6
+          break;
+        case 1:
+          // Sound 2: Magical Star Twinkle (High Bell Sparkle)
+          playTone(783.99, 'sine', 0.0, 0.2, 0.3);
+          playTone(987.77, 'sine', 0.08, 0.2, 0.3);
+          playTone(1174.66, 'sine', 0.16, 0.25, 0.35);
+          playTone(1567.98, 'triangle', 0.25, 0.6, 0.4);
+          break;
+        case 2:
+          // Sound 3: Playful Xylophone Fanfare
+          playTone(587.33, 'triangle', 0.0, 0.15, 0.4);
+          playTone(880.00, 'triangle', 0.12, 0.15, 0.4);
+          playTone(1174.66, 'triangle', 0.24, 0.45, 0.4);
+          break;
+        case 3:
+          // Sound 4: Cheerful Level-Up Chime
+          playTone(440.0, 'sine', 0.0, 0.15, 0.3);
+          playTone(554.37, 'sine', 0.09, 0.15, 0.3);
+          playTone(659.25, 'sine', 0.18, 0.15, 0.3);
+          playTone(880.00, 'triangle', 0.28, 0.55, 0.4);
+          break;
+        case 4:
+        default:
+          // Sound 5: Joyful Grand Chord
+          playTone(523.25, 'sine', 0.0, 0.6, 0.25);
+          playTone(659.25, 'sine', 0.05, 0.6, 0.25);
+          playTone(783.99, 'triangle', 0.1, 0.6, 0.3);
+          playTone(1046.50, 'triangle', 0.15, 0.7, 0.35);
+          break;
+      }
+    }
 
-      // Dynamic Hint Text
-      let hint = "";
-      if (val <= 35) {
-        hint = "⚡ <strong>Desk Mode (" + val + "°):</strong> Very sensitive. Best when sitting completely still at a desk.";
-      } else if (val <= 52) {
-        hint = "⭐ <strong>Car Mode (" + val + "°):</strong> Requires a deliberate steering wheel turn so car bumps won't trigger it!";
+    // Gentle, non-punishing "Try Again" sound (Warm downward plink)
+    function playTryAgainSound() {
+      playTone(400, 'sine', 0.0, 0.2, 0.25);
+      playTone(320, 'sine', 0.15, 0.3, 0.25);
+    }
+
+    // =========================================================
+    // 4. SPEECH SYNTHESIS ENGINE
+    // =========================================================
+    function speak(text, onComplete = null) {
+      if (!('speechSynthesis' in window)) {
+        if (onComplete) onComplete();
+        return;
+      }
+
+      synth.cancel();
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 0.95; // Clear and gently paced for 7-year-old ESL
+      utterance.pitch = 1.1; // Friendly and upbeat
+
+      // Pick an English voice
+      const voices = synth.getVoices();
+      const enVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Samantha')));
+      if (enVoice) {
+        utterance.voice = enVoice;
       } else {
-        hint = "🛡️ <strong>Bumpy Road Mode (" + val + "°):</strong> Requires a deep tilt. Perfect for highways and bumpy rides.";
+        const anyEn = voices.find(v => v.lang.startsWith('en'));
+        if (anyEn) utterance.voice = anyEn;
       }
-      startTiltHint.innerHTML = hint;
-      modalTiltHint.innerHTML = hint;
 
-      // Update Preset Buttons Active State
-      const isDesk = val === 30;
-      const isCar = val === 48;
-      const isBumpy = val === 58;
+      speakingIndicator.classList.add('active');
 
-      updatePresetBtn('preset-desk-start', isDesk);
-      updatePresetBtn('preset-desk-modal', isDesk);
-      updatePresetBtn('preset-car-start', isCar);
-      updatePresetBtn('preset-car-modal', isCar);
-      updatePresetBtn('preset-bumpy-start', isBumpy);
-      updatePresetBtn('preset-bumpy-modal', isBumpy);
+      utterance.onend = () => {
+        speakingIndicator.classList.remove('active');
+        if (onComplete) onComplete();
+      };
+
+      utterance.onerror = () => {
+        speakingIndicator.classList.remove('active');
+        if (onComplete) onComplete();
+      };
+
+      synth.speak(utterance);
     }
 
-    function updatePresetBtn(id, isActive) {
-      const btn = document.getElementById(id);
-      if (btn) {
-        if (isActive) btn.classList.add('active');
-        else btn.classList.remove('active');
-      }
+    // =========================================================
+    // 5. NAVIGATION & VIEW CONTROLS
+    // =========================================================
+    function switchView(viewName) {
+      currentView = viewName;
+      synth.cancel();
+
+      homeView.classList.remove('active');
+      gameView.classList.remove('active');
+      testView.classList.remove('active');
+
+      if (viewName === 'home') homeView.classList.add('active');
+      else if (viewName === 'game') gameView.classList.add('active');
+      else if (viewName === 'test') testView.classList.add('active');
     }
 
-    function openSettingsModal() {
-      settingsModal.classList.add('show');
+    function goToHome(event) {
+      if (event) event.stopPropagation();
+      switchView('home');
     }
 
-    function closeSettingsModal(event) {
-      if (event && event.target !== settingsModal) return;
-      settingsModal.classList.remove('show');
-    }
+    async function ensureSensorsAndAudio() {
+      getAudioContext();
 
-    // --- Start App & Unlock Sensors / Audio ---
-    async function startApp() {
+      // iOS permission handler
       if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
         try {
           const orientationPerm = await DeviceOrientationEvent.requestPermission();
           const motionPerm = await DeviceMotionEvent.requestPermission();
           if (orientationPerm !== 'granted' || motionPerm !== 'granted') {
-            alert('Sensor permission is required for motion detection.');
-            return;
+            alert('Sensor permission required for motion detection.');
+            return false;
           }
         } catch (e) {
           console.error(e);
         }
       }
 
-      speak("Ready! Tilt left or right to drive.");
-
-      window.addEventListener('deviceorientation', handleOrientation, true);
-      window.addEventListener('devicemotion', handleMotion, true);
-
-      startOverlay.style.display = 'none';
-      isAppStarted = true;
+      if (!isSensorsListening) {
+        window.addEventListener('deviceorientation', handleOrientation, true);
+        window.addEventListener('devicemotion', handleMotion, true);
+        isSensorsListening = true;
+      }
+      return true;
     }
 
-    // --- Text-To-Speech Function ---
-    function speak(text) {
-      if (!('speechSynthesis' in window)) return;
+    async function launchGame() {
+      await ensureSensorsAndAudio();
+      switchView('game');
+      initGameSession();
+    }
 
-      synth.cancel();
+    async function launchTesting() {
+      await ensureSensorsAndAudio();
+      switchView('test');
+      speak("Testing mode. Tilt or shake your phone.");
+    }
 
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = 1.05;
-      utterance.pitch = 1.1;
+    // =========================================================
+    // 6. GAME LOGIC & FLOW
+    // =========================================================
+    function initGameSession() {
+      // Shuffle questions
+      gameQuestions = [...QUESTIONS_BANK].sort(() => 0.5 - Math.random()).slice(0, 15);
+      currentQuestionIndex = 0;
+      gameScore = 0;
+      isGameLocked = false;
+      hasReturnedToCenter = true;
 
-      const voices = synth.getVoices();
-      const enVoice = voices.find(v => v.lang.startsWith('en'));
-      if (enVoice) {
-        utterance.voice = enVoice;
+      gameScoreLabel.textContent = `⭐ ${gameScore}`;
+      presentCurrentQuestion();
+    }
+
+    function presentCurrentQuestion() {
+      if (currentQuestionIndex >= gameQuestions.length) {
+        // Game complete!
+        playRandomCelebrationSound();
+        gameQuestionText.textContent = "🎉 Awesome job! You completed all questions!";
+        gameOptionsSpoken.textContent = `Final Score: ${gameScore} stars!`;
+        speak(`Awesome job! You finished the game and earned ${gameScore} stars! Tap screen to play again.`);
+        return;
       }
 
-      synth.speak(utterance);
+      const qObj = gameQuestions[currentQuestionIndex];
+      gameProgressLabel.textContent = `Question ${currentQuestionIndex + 1} / ${gameQuestions.length}`;
+      gameQuestionText.textContent = `"${qObj.q}"`;
+      gameOptionsSpoken.textContent = `"Left for yes. Right for no."`;
+
+      // Reset option highlights
+      btnOptionLeft.className = "option-btn left";
+      btnOptionRight.className = "option-btn right";
+
+      isGameLocked = false;
+
+      // Speak question clearly with pauses
+      const fullSpeech = `${qObj.q} ... Left for yes. Right for no.`;
+      speak(fullSpeech);
     }
 
-    function triggerAction(actionName, speechVoice, icon) {
-      if (isCoolingDown) return;
+    // Tap anywhere on screen to repeat question
+    function onGameScreenTap(event) {
+      if (currentView !== 'game') return;
 
-      isCoolingDown = true;
-      lastSpokenText = speechVoice;
+      // If finished, restart
+      if (currentQuestionIndex >= gameQuestions.length) {
+        initGameSession();
+        return;
+      }
 
-      motionIcon.textContent = icon;
-      motionText.textContent = actionName;
-      displayCard.classList.add('active');
+      if (isGameLocked) return;
 
-      speak(speechVoice);
-
-      cooldownBar.style.transition = 'none';
-      cooldownBar.style.width = '100%';
-
-      setTimeout(() => {
-        cooldownBar.style.transition = `width ${COOLDOWN_MS}ms linear`;
-        cooldownBar.style.width = '0%';
-      }, 50);
-
-      setTimeout(() => {
-        isCoolingDown = false;
-        displayCard.classList.remove('active');
-      }, COOLDOWN_MS);
+      const qObj = gameQuestions[currentQuestionIndex];
+      speak(`Listen again: ${qObj.q} ... Left for yes, right for no.`);
     }
 
-    // --- 1. Orientation Handler (Using Dynamic Threshold) ---
+    // Called when user tilts or taps Left / Right
+    function evaluateAnswer(userPickedYes) {
+      if (isGameLocked || currentView !== 'game') return;
+      if (currentQuestionIndex >= gameQuestions.length) return;
+
+      const qObj = gameQuestions[currentQuestionIndex];
+      const isCorrect = (userPickedYes === qObj.ans);
+
+      isGameLocked = true; // Lock until next question
+
+      if (userPickedYes) {
+        btnOptionLeft.classList.add(isCorrect ? 'correct-highlight' : 'wrong-highlight');
+      } else {
+        btnOptionRight.classList.add(isCorrect ? 'correct-highlight' : 'wrong-highlight');
+      }
+
+      if (isCorrect) {
+        // Correct Answer!
+        gameScore++;
+        gameScoreLabel.textContent = `⭐ ${gameScore}`;
+
+        // 1. Play randomized celebration sound
+        playRandomCelebrationSound();
+
+        // 2. Speak randomized encouragement + brief confirmation
+        const randomPraise = PRAISES[Math.floor(Math.random() * PRAISES.length)];
+        const confirmation = `${randomPraise} ${qObj.expl}`;
+
+        setTimeout(() => {
+          speak(confirmation, () => {
+            // Next question after speaking
+            setTimeout(() => {
+              currentQuestionIndex++;
+              presentCurrentQuestion();
+            }, 600);
+          });
+        }, 350);
+
+      } else {
+        // Gentle Try Again
+        playTryAgainSound();
+
+        setTimeout(() => {
+          speak("Oops! Let's try again.", () => {
+            setTimeout(() => {
+              btnOptionLeft.className = "option-btn left";
+              btnOptionRight.className = "option-btn right";
+              isGameLocked = false;
+              // Re-prompt
+              presentCurrentQuestion();
+            }, 500);
+          });
+        }, 350);
+      }
+    }
+
+    function handleManualChoice(userPickedYes, event) {
+      if (event) event.stopPropagation();
+      evaluateAnswer(userPickedYes);
+    }
+
+    // =========================================================
+    // 7. SENSOR EVENT HANDLERS (Orientation & Motion)
+    // =========================================================
     let wasFaceDown = false;
 
     function handleOrientation(event) {
-      const gamma = event.gamma || 0; // Left (-90) to Right (+90)
-      const beta = event.beta || 0;   // Front (-180) to Back (+180)
+      const gamma = event.gamma || 0; // Left (-) to Right (+)
+      const beta = event.beta || 0;
 
-      valGamma.textContent = gamma.toFixed(1) + '°';
-      valBeta.textContent = beta.toFixed(1) + '°';
+      // Update Debug values if in Testing view
+      if (currentView === 'test') {
+        valGamma.textContent = gamma.toFixed(1) + '°';
+        valBeta.textContent = beta.toFixed(1) + '°';
+      }
 
-      // Check Face Up return
-      if (wasFaceDown && Math.abs(beta) < 60) {
-        wasFaceDown = false;
-        triggerAction("Face Up!", "Flipped face up", "📱");
+      // Smooth Car steering icon visual
+      const clampedAngle = Math.max(-45, Math.min(45, gamma));
+      steeringCarIcon.style.transform = `rotate(${clampedAngle * 0.7}deg)`;
+
+      // Check center return (user must bring phone back upright between answers)
+      if (Math.abs(gamma) < 18) {
+        hasReturnedToCenter = true;
+        btnOptionLeft.classList.remove('tilted');
+        btnOptionRight.classList.remove('tilted');
+      }
+
+      // --- GAME MODE HANDLING ---
+      if (currentView === 'game') {
+        if (!isGameLocked && hasReturnedToCenter) {
+          if (gamma < -tiltAngleThreshold) {
+            hasReturnedToCenter = false;
+            btnOptionLeft.classList.add('tilted');
+            evaluateAnswer(true); // Tilt Left = YES
+          } else if (gamma > tiltAngleThreshold) {
+            hasReturnedToCenter = false;
+            btnOptionRight.classList.add('tilted');
+            evaluateAnswer(false); // Tilt Right = NO
+          }
+        }
         return;
       }
 
-      if (isCoolingDown) return;
+      // --- TESTING MODE HANDLING ---
+      if (currentView === 'test') {
+        // Face up return
+        if (wasFaceDown && Math.abs(beta) < 60) {
+          wasFaceDown = false;
+          triggerTestAction("Face Up!", "Flipped face up", "📱");
+          return;
+        }
 
-      // Face-down detection
-      if (Math.abs(beta) > 135) {
-        wasFaceDown = true;
-        triggerAction("Face Down!", "Flipped face down", "🔄");
-        return;
-      }
+        if (isCoolingDown) return;
 
-      // Tilt Left vs Right using our customizable tiltAngleThreshold
-      if (gamma < -tiltAngleThreshold) {
-        triggerAction("Tilt Left!", "Tilt left", "⬅️");
-      } else if (gamma > tiltAngleThreshold) {
-        triggerAction("Tilt Right!", "Tilt right", "➡️");
+        if (Math.abs(beta) > 135) {
+          wasFaceDown = true;
+          triggerTestAction("Face Down!", "Flipped face down", "🔄");
+          return;
+        }
+
+        if (gamma < -tiltAngleThreshold) {
+          triggerTestAction("Tilt Left!", "Tilt left", "⬅️");
+        } else if (gamma > tiltAngleThreshold) {
+          triggerTestAction("Tilt Right!", "Tilt right", "➡️");
+        }
       }
     }
 
-    // --- 2. Motion Handler (Shake Left / Right & Shake Up / Down) ---
     let lastGrav = { x: null, y: null, z: null, time: 0 };
 
     function handleMotion(event) {
+      if (currentView !== 'test') return; // Only process acceleration in Testing view
+
       let x = 0;
       let y = 0;
 
@@ -713,7 +1235,7 @@
         valGravZ.textContent = accGrav.z.toFixed(1);
         if (!isCoolingDown && !wasFaceDown && accGrav.z < -7 && Math.abs(accGrav.x || 0) < 4) {
           wasFaceDown = true;
-          triggerAction("Face Down!", "Flipped face down", "🔄");
+          triggerTestAction("Face Down!", "Flipped face down", "🔄");
           return;
         }
       }
@@ -721,22 +1243,76 @@
       if (isCoolingDown) return;
 
       if (x > SHAKE_THRESHOLD && x > y * 1.25) {
-        triggerAction("Shake Left & Right!", "Shake left and right", "📳");
+        triggerTestAction("Shake Left & Right!", "Shake left and right", "📳");
       } else if (y > SHAKE_THRESHOLD && y > x * 1.25) {
-        triggerAction("Shake Up & Down!", "Shake up and down", "↕️");
+        triggerTestAction("Shake Up & Down!", "Shake up and down", "↕️");
       }
     }
 
-    // --- Utilities ---
+    function triggerTestAction(actionName, speechVoice, icon) {
+      if (isCoolingDown) return;
+      isCoolingDown = true;
+
+      testMotionIcon.textContent = icon;
+      testMotionText.textContent = actionName;
+      testDisplayCard.classList.add('active');
+
+      speak(speechVoice);
+
+      testCooldownBar.style.transition = 'none';
+      testCooldownBar.style.width = '100%';
+
+      setTimeout(() => {
+        testCooldownBar.style.transition = `width ${COOLDOWN_MS}ms linear`;
+        testCooldownBar.style.width = '0%';
+      }, 50);
+
+      setTimeout(() => {
+        isCoolingDown = false;
+        testDisplayCard.classList.remove('active');
+      }, COOLDOWN_MS);
+    }
+
+    // =========================================================
+    // 8. SENSITIVITY CALIBRATION
+    // =========================================================
+    function updateTiltThreshold(val) {
+      tiltAngleThreshold = parseInt(val, 10);
+      localStorage.setItem('carGame_tiltThreshold', tiltAngleThreshold);
+      syncSensitivityUI(tiltAngleThreshold);
+    }
+
+    function setPreset(val) {
+      updateTiltThreshold(val);
+    }
+
+    function syncSensitivityUI(val) {
+      homeTiltSlider.value = val;
+      homeTiltBadge.textContent = val + '°';
+      valThreshold.textContent = `±${val}°`;
+
+      const isDesk = val === 30;
+      const isCar = val === 48;
+      const isBumpy = val === 58;
+
+      updateBtnClass('home-preset-desk', isDesk);
+      updateBtnClass('home-preset-car', isCar);
+      updateBtnClass('home-preset-bumpy', isBumpy);
+    }
+
+    function updateBtnClass(id, isActive) {
+      const el = document.getElementById(id);
+      if (el) {
+        if (isActive) el.classList.add('active');
+        else el.classList.remove('active');
+      }
+    }
+
     function testVoice() {
-      speak("Testing voice. Speech is working perfectly!");
+      speak("Testing voice. The sound and audio are ready!");
     }
 
-    function toggleDebug() {
-      const debugBox = document.getElementById('debug-box');
-      debugBox.style.display = debugBox.style.display === 'none' ? 'block' : 'none';
-    }
-
+    // Preload speech synthesis voices
     if ('speechSynthesis' in window) {
       window.speechSynthesis.onvoiceschanged = () => {
         window.speechSynthesis.getVoices();
