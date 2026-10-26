@@ -733,12 +733,18 @@
     ];
 
     const PRAISES_ZH = [
-      "答對了！",
-      "太棒了！",
-      "好厲害！",
-      "完全正確！",
-      "一級棒！",
-      "太神了！"
+      "哇，答對了！",
+      "太棒了！算得真快！",
+      "好聰明喔！",
+      "太厲害了！完全正確！",
+      "哇，一級棒！",
+      "好棒喔！算得真好！"
+    ];
+
+    const RETRIES_ZH = [
+      "沒關係喔，我們再想想看，再來試一次！",
+      "差一點點喔，我們再來試一次！",
+      "不急不急，放輕鬆再聽一次喔！"
     ];
 
     // =========================================================
@@ -874,6 +880,35 @@ valThreshold.textContent = "±65°";
     // =========================================================
     // 4. SPEECH SYNTHESIS ENGINE (TRADITIONAL CHINESE & ENGLISH)
     // =========================================================
+    // Select the most natural, gentle female voice available on Android / iOS
+    function getBestChineseSisterVoice() {
+      const voices = synth.getVoices();
+      if (!voices || voices.length === 0) return null;
+
+      const zhVoices = voices.filter(v => 
+        v.lang && (v.lang.toLowerCase().startsWith('zh') || v.lang.toLowerCase().startsWith('cmn'))
+      );
+      if (zhVoices.length === 0) return null;
+
+      // 1. Google 國語 (台灣) / Google Taiwan natural female voice
+      const p1 = zhVoices.find(v => /Google/i.test(v.name) && /(台灣|臺灣|zh-TW|cmn-TW)/i.test(v.name + v.lang));
+      if (p1) return p1;
+
+      // 2. High-quality gentle female voice names (Hsiao-Chen, Yating, Mei-Jia, Xiaoxiao, Ting-Ting, Siri)
+      const p2 = zhVoices.find(v => /(Hsiao|Yating|Mei-Jia|Meijia|Ting|Xiaoxiao|HanHan|Siri)/i.test(v.name));
+      if (p2) return p2;
+
+      // 3. Any Taiwan voice
+      const p3 = zhVoices.find(v => /(zh-TW|cmn-TW|zh_TW|台灣|臺灣)/i.test(v.lang + v.name));
+      if (p3) return p3;
+
+      // 4. Any Google Chinese voice
+      const p4 = zhVoices.find(v => /Google/i.test(v.name));
+      if (p4) return p4;
+
+      return zhVoices[0];
+    }
+
     function speak(text, onComplete = null, forcedLang = null) {
       if (!('speechSynthesis' in window)) {
         if (onComplete) onComplete();
@@ -887,11 +922,11 @@ valThreshold.textContent = "±65°";
 
       if (isZh) {
         utterance.lang = 'zh-TW';
+        // Gentle older sister parameters: slightly warm, calm, non-metallic
         utterance.rate = 0.88;
-        utterance.pitch = 1.05;
+        utterance.pitch = 0.98;
 
-        const voices = synth.getVoices();
-        const zhVoice = voices.find(v => v.lang === 'zh-TW' || v.lang === 'zh-HK' || v.lang.startsWith('zh'));
+        const zhVoice = getBestChineseSisterVoice();
         if (zhVoice) {
           utterance.voice = zhVoice;
         }
@@ -1012,7 +1047,7 @@ valThreshold.textContent = "±65°";
       if (currentQuestionIndex >= gameQuestions.length) {
         playRandomCelebrationSound();
         if (currentGameMode === 'multiplication_zh') {
-          speak(`太棒了！你完成了所有乘法題目，總共得到 ${gameScore} 顆星星！點擊螢幕可以再玩一次喔。`);
+          speak(`哇！太厲害了！你完成了所有的乘法題目，總共拿到 ${gameScore} 顆星星！點一下螢幕，大姐姐再陪你玩一次喔！`);
         } else {
           speak(`Awesome job! You finished the game and earned ${gameScore} stars! Tap anywhere to play again.`);
         }
@@ -1029,7 +1064,7 @@ valThreshold.textContent = "±65°";
       let fullSpeech = "";
       if (currentGameMode === 'multiplication_zh') {
         // e.g. "3乘以5等於？ ... 左邊：15， ... 右邊：20。"
-        fullSpeech = `${qObj.q} ... 左邊：${qObj.left}，... 右邊：${qObj.right}。`;
+        fullSpeech = `${qObj.q} 多少呢？ ... 左邊是 ${qObj.left}， ... 右邊是 ${qObj.right} 喔。`;
       } else {
         fullSpeech = `${qObj.q} ... Left for ${qObj.left}, ... right for ${qObj.right}.`;
       }
@@ -1049,7 +1084,7 @@ valThreshold.textContent = "±65°";
       const qObj = gameQuestions[currentQuestionIndex];
       let repeatSpeech = "";
       if (currentGameMode === 'multiplication_zh') {
-        repeatSpeech = `再聽一次：${qObj.q} ... 左邊：${qObj.left}，... 右邊：${qObj.right}。`;
+        repeatSpeech = `我們再聽一次喔：${qObj.q} 多少呢？ ... 左邊是 ${qObj.left}， ... 右邊是 ${qObj.right} 喔。`;
       } else {
         repeatSpeech = `Listen again: ... ${qObj.q} ... Left for ${qObj.left}, ... right for ${qObj.right}.`;
       }
@@ -1078,10 +1113,10 @@ valThreshold.textContent = "±65°";
         let confirmation = "";
         if (currentGameMode === 'multiplication_zh') {
           const randomPraise = PRAISES_ZH[Math.floor(Math.random() * PRAISES_ZH.length)];
-          confirmation = `${randomPraise} ... ${qObj.expl}`;
+          confirmation = `${randomPraise} ${qObj.expl}`;
         } else {
           const randomPraise = PRAISES_EN[Math.floor(Math.random() * PRAISES_EN.length)];
-          confirmation = `${randomPraise} ... ${qObj.expl}`;
+          confirmation = `${randomPraise} ${qObj.expl}`;
         }
 
         setTimeout(() => {
@@ -1096,7 +1131,7 @@ valThreshold.textContent = "±65°";
       } else {
         playTryAgainSound();
 
-        const retryMsg = (currentGameMode === 'multiplication_zh') ? "哎呀，再試一次看看！" : "Oops! ... Let's try again.";
+        const retryMsg = (currentGameMode === 'multiplication_zh') ? RETRIES_ZH[Math.floor(Math.random() * RETRIES_ZH.length)] : "Oops! ... Let's try again.";
 
         setTimeout(() => {
           speak(retryMsg, () => {
@@ -1249,7 +1284,7 @@ valThreshold.textContent = "±65°";
     }
 
     function testVoiceZh() {
-      speak("測試中文語音。3乘以5等於？左邊：15，右邊：20。", null, 'zh');
+      speak("你好呀！大姐姐陪你在車上玩九九乘法喔！3乘以5等於多少呢？左邊是15，右邊是20喔。", null, 'zh');
     }
 
     if ('speechSynthesis' in window) {
