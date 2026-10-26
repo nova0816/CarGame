@@ -16,12 +16,12 @@
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: #0f172a;
+      background-color: #0b1120;
       color: #e2e8f0;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      overflow-x: hidden;
+      overflow: hidden;
     }
 
     /* Common View Styles */
@@ -164,256 +164,6 @@
       letter-spacing: 0.5px;
     }
 
-    .home-footer-info {
-      font-size: 0.8rem;
-      color: #64748b;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-
-    /* =========================================
-       2. GAME VIEW (Calm, Minimalist, Audio-First)
-       ========================================= */
-    /* Low visual stimulation: dark, clean, no flashy distraction */
-    #game-view {
-      cursor: pointer; /* Whole screen is clickable to repeat audio */
-    }
-
-    .game-status-bar {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.85rem;
-      color: #94a3b8;
-      font-weight: 600;
-      padding: 0 0.2rem;
-    }
-
-    .score-badge {
-      background: #334155;
-      color: #38bdf8;
-      padding: 0.3rem 0.75rem;
-      border-radius: 9999px;
-      font-weight: 700;
-      font-size: 0.9rem;
-    }
-
-    /* Question Box - Simple, readable, not flashy */
-    .question-box {
-      width: 100%;
-      background: #1e293b;
-      border: 1px solid #334155;
-      border-radius: 20px;
-      padding: 1.8rem 1.4rem;
-      margin: 1rem 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 180px;
-      position: relative;
-    }
-
-    .question-prompt {
-      font-size: 1.45rem;
-      font-weight: 700;
-      color: #f1f5f9;
-      line-height: 1.4;
-      margin-bottom: 0.8rem;
-    }
-
-    .voice-subtext {
-      font-size: 0.95rem;
-      color: #94a3b8;
-      font-weight: 500;
-    }
-
-    .speaking-indicator {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 0.8rem;
-      color: #38bdf8;
-      margin-top: 0.6rem;
-      opacity: 0;
-      transition: opacity 0.2s;
-    }
-
-    .speaking-indicator.active {
-      opacity: 1;
-    }
-
-    .sound-wave {
-      display: inline-block;
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: #38bdf8;
-      animation: pulseWave 1s infinite alternate ease-in-out;
-    }
-
-    @keyframes pulseWave {
-      0% { transform: scale(0.8); opacity: 0.4; }
-      100% { transform: scale(1.6); opacity: 1; }
-    }
-
-    /* Left / Right Options Layout */
-    .options-split {
-      width: 100%;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-      margin: 0.5rem 0 1rem 0;
-    }
-
-    .option-btn {
-      background: #1e293b;
-      border: 2px solid #334155;
-      border-radius: 18px;
-      padding: 1.4rem 0.8rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      transition: all 0.2s ease;
-      cursor: pointer;
-    }
-
-    .option-btn.left {
-      border-color: #334155;
-    }
-
-    .option-btn.right {
-      border-color: #334155;
-    }
-
-    /* Active Highlight during Tilt */
-    .option-btn.tilted {
-      border-color: #38bdf8;
-      background: #1e3a5f;
-      transform: scale(1.04);
-      box-shadow: 0 0 25px rgba(56, 189, 248, 0.35);
-    }
-
-    .option-btn.correct-highlight {
-      border-color: #22c55e;
-      background: rgba(34, 197, 94, 0.15);
-    }
-
-    .option-btn.wrong-highlight {
-      border-color: #ef4444;
-      background: rgba(239, 68, 68, 0.15);
-    }
-
-    .option-direction {
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: #94a3b8;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .option-title {
-      font-size: 1.5rem;
-      font-weight: 800;
-      color: #f8fafc;
-    }
-
-    /* Steering Tilt Visual Feedback */
-    .tilt-guide {
-      width: 100%;
-      background: #1e293b;
-      border-radius: 14px;
-      padding: 0.6rem 0.8rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 0.8rem;
-      color: #94a3b8;
-      margin-bottom: 0.6rem;
-    }
-
-    .tilt-car-icon {
-      font-size: 1.4rem;
-      transition: transform 0.15s ease-out;
-      display: inline-block;
-    }
-
-    /* Bottom Prompt - Tap to Repeat */
-    .tap-repeat-banner {
-      width: 100%;
-      background: #1e293b;
-      border: 1px dashed #475569;
-      border-radius: 14px;
-      padding: 0.85rem;
-      font-size: 0.85rem;
-      color: #94a3b8;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-    }
-
-    .tap-repeat-banner strong {
-      color: #38bdf8;
-    }
-
-    /* =========================================
-       3. TESTING VIEW (Calibration & Sensor Tools)
-       ========================================= */
-    .display-card {
-      background: #1e293b;
-      border: 3px solid #334155;
-      border-radius: 26px;
-      width: 100%;
-      height: 250px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 1.2rem;
-      transition: all 0.25s ease;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
-      margin: 0.8rem 0;
-    }
-
-    .display-card.active {
-      border-color: #38bdf8;
-      box-shadow: 0 0 35px rgba(56, 189, 248, 0.5);
-      transform: scale(1.02);
-    }
-
-    .motion-icon {
-      font-size: 4.5rem;
-      line-height: 1;
-      margin-bottom: 0.6rem;
-    }
-
-    .motion-text {
-      font-size: 1.6rem;
-      font-weight: 700;
-      color: #f1f5f9;
-    }
-
-    .cooldown-bar-container {
-      width: 80%;
-      height: 7px;
-      background: #334155;
-      border-radius: 4px;
-      margin-top: 1rem;
-      overflow: hidden;
-    }
-
-    .cooldown-bar {
-      height: 100%;
-      width: 0%;
-      background: #38bdf8;
-      transition: width 0.1s linear;
-    }
-
     /* Sensitivity Settings Card */
     .sensitivity-card {
       background: #1e293b;
@@ -484,17 +234,6 @@
       margin-top: 0.25rem;
     }
 
-    .sensitivity-hint {
-      font-size: 0.82rem;
-      color: #38bdf8;
-      background: rgba(56, 189, 248, 0.1);
-      border: 1px solid rgba(56, 189, 248, 0.25);
-      border-radius: 8px;
-      padding: 0.45rem 0.65rem;
-      margin-top: 0.6rem;
-      line-height: 1.35;
-    }
-
     .preset-row {
       display: flex;
       gap: 0.4rem;
@@ -520,7 +259,163 @@
       border-color: #38bdf8;
     }
 
-    /* Debug Box */
+    .home-footer-info {
+      font-size: 0.8rem;
+      color: #64748b;
+      margin-top: 0.5rem;
+    }
+
+    /* =========================================
+       2. GAME VIEW (ONLY Left and Right Arrow)
+       ========================================= */
+    #game-view {
+      position: relative;
+      height: 100vh;
+      width: 100vw;
+      max-width: 100%;
+      padding: 0;
+      margin: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background-color: #060913;
+      cursor: pointer; /* Tapping anywhere repeats audio */
+    }
+
+    #game-view.active {
+      display: flex;
+    }
+
+    /* Subtle exit button for parents */
+    .btn-game-exit {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      background: rgba(30, 41, 59, 0.3);
+      color: #64748b;
+      border: none;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 50;
+      opacity: 0.35;
+      transition: opacity 0.2s, background 0.2s;
+    }
+    .btn-game-exit:active {
+      opacity: 1;
+      background: rgba(51, 65, 85, 0.8);
+      color: #f8fafc;
+    }
+
+    /* Fullscreen container for Left and Right Arrow */
+    .arrows-stage {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12vw;
+      pointer-events: none; /* No buttons to press! */
+    }
+
+    .arrow-icon-wrapper {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: rgba(15, 23, 42, 0.6);
+      border: 3px solid #1e293b;
+      color: #334155;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* Active Highlight during Tilt */
+    .arrow-icon-wrapper.active-tilt {
+      color: #38bdf8;
+      border-color: #38bdf8;
+      background: rgba(2, 132, 199, 0.2);
+      transform: scale(1.22);
+      box-shadow: 0 0 45px rgba(56, 189, 248, 0.45);
+    }
+
+    /* Correct Flash */
+    .arrow-icon-wrapper.correct-flash {
+      color: #22c55e;
+      border-color: #22c55e;
+      background: rgba(34, 197, 94, 0.2);
+      transform: scale(1.28);
+      box-shadow: 0 0 50px rgba(34, 197, 94, 0.6);
+    }
+
+    /* Wrong Flash */
+    .arrow-icon-wrapper.wrong-flash {
+      color: #ef4444;
+      border-color: #ef4444;
+      background: rgba(239, 68, 68, 0.2);
+      transform: scale(1.15);
+      box-shadow: 0 0 40px rgba(239, 68, 68, 0.5);
+    }
+
+    /* =========================================
+       3. TESTING VIEW (Diagnostic & Sensor Tools)
+       ========================================= */
+    .display-card {
+      background: #1e293b;
+      border: 3px solid #334155;
+      border-radius: 26px;
+      width: 100%;
+      height: 250px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.2rem;
+      transition: all 0.25s ease;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+      margin: 0.8rem 0;
+    }
+
+    .display-card.active {
+      border-color: #38bdf8;
+      box-shadow: 0 0 35px rgba(56, 189, 248, 0.5);
+      transform: scale(1.02);
+    }
+
+    .motion-icon {
+      font-size: 4.5rem;
+      line-height: 1;
+      margin-bottom: 0.6rem;
+    }
+
+    .motion-text {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #f1f5f9;
+    }
+
+    .cooldown-bar-container {
+      width: 80%;
+      height: 7px;
+      background: #334155;
+      border-radius: 4px;
+      margin-top: 1rem;
+      overflow: hidden;
+    }
+
+    .cooldown-bar {
+      height: 100%;
+      width: 0%;
+      background: #38bdf8;
+      transition: width 0.1s linear;
+    }
+
     .debug-box {
       background: #1e293b;
       border: 1px solid #334155;
@@ -571,7 +466,7 @@
 <body>
 
   <!-- =========================================
-       VIEW 1: HOME PAGE (Testing or Game)
+       VIEW 1: HOME PAGE
        ========================================= -->
   <div id="home-view" class="view active">
     <div class="home-header">
@@ -588,7 +483,7 @@
         <div class="menu-card-icon">🎮</div>
         <div class="menu-card-info">
           <h2>Play Game <span class="badge-recommend">Kids</span></h2>
-          <p>Listening questions: tilt left for <strong>Yes</strong>, tilt right for <strong>No</strong>. Tap screen to repeat.</p>
+          <p>Audio-only listening game. Tilt left for <strong>Yes</strong>, tilt right for <strong>No</strong>. Tap screen to repeat.</p>
         </div>
       </div>
 
@@ -624,58 +519,34 @@
     </div>
 
     <div class="home-footer-info">
-      <span>🛡️ Low-stimulation screen designed for car rides</span>
+      <span>🛡️ Zero-screen-distraction design for car rides</span>
     </div>
   </div>
 
   <!-- =========================================
-       VIEW 2: GAME VIEW (The In-Car Listening Game)
+       VIEW 2: GAME VIEW (ONLY Left and Right Arrow)
        ========================================= -->
   <div id="game-view" class="view" onclick="onGameScreenTap(event)">
-    <div class="nav-bar">
-      <button class="btn-nav-back" onclick="goToHome(event)">
-        ← Menu
-      </button>
-      <span class="nav-title" id="game-progress-label">Question 1 / 15</span>
-      <div class="score-badge" id="game-score-label">⭐ 0</div>
-    </div>
+    <!-- Discreet back button for parent in the corner -->
+    <button class="btn-game-exit" onclick="goToHome(event)" title="Back to menu">✕</button>
 
-    <!-- Question Box -->
-    <div class="question-box">
-      <div class="question-prompt" id="game-question-text">
-        "Is a pig bigger than a mouse?"
+    <!-- Just Left and Right Arrow -->
+    <div class="arrows-stage">
+      <!-- Left Arrow -->
+      <div class="arrow-icon-wrapper left" id="arrow-left">
+        <svg viewBox="0 0 24 24" width="72" height="72" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
       </div>
-      <div class="voice-subtext" id="game-options-spoken">
-        "Left for yes. Right for no."
-      </div>
-      <div class="speaking-indicator" id="speaking-indicator">
-        <span class="sound-wave"></span>
-        <span>Speaking...</span>
-      </div>
-    </div>
 
-    <!-- Two Big Buttons (Left / Right) -->
-    <div class="options-split">
-      <div class="option-btn left" id="btn-option-left" onclick="handleManualChoice(true, event)">
-        <span class="option-direction">⬅️ Tilt Left</span>
-        <span class="option-title" id="opt-left-label">YES</span>
+      <!-- Right Arrow -->
+      <div class="arrow-icon-wrapper right" id="arrow-right">
+        <svg viewBox="0 0 24 24" width="72" height="72" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
       </div>
-      <div class="option-btn right" id="btn-option-right" onclick="handleManualChoice(false, event)">
-        <span class="option-direction">Tilt Right ➡️</span>
-        <span class="option-title" id="opt-right-label">NO</span>
-      </div>
-    </div>
-
-    <!-- Steering Guide (Shows lean angle smoothly) -->
-    <div class="tilt-guide">
-      <span>⬅️ Steer Left</span>
-      <span class="tilt-car-icon" id="steering-car-icon">🚗</span>
-      <span>Steer Right ➡️</span>
-    </div>
-
-    <!-- Tap anywhere banner -->
-    <div class="tap-repeat-banner">
-      <span>🔊 <strong>Tap screen</strong> to hear the question again</span>
     </div>
   </div>
 
@@ -740,34 +611,34 @@
     // 1. DATA: 25 Age-Appropriate ESL Questions for 7-Year-Olds
     // =========================================================
     const QUESTIONS_BANK = [
-      { q: "Is a pig bigger than a mouse?", left: "YES", right: "NO", ans: true, expl: "A pig is much bigger than a mouse!" },
-      { q: "Can a bird fly in the sky?", left: "YES", right: "NO", ans: true, expl: "Birds have wings to fly high!" },
-      { q: "Does a cow drink coffee?", left: "YES", right: "NO", ans: false, expl: "Cows drink water, not coffee!" },
-      { q: "Is ice cream cold?", left: "YES", right: "NO", ans: true, expl: "Ice cream is very cold and sweet!" },
-      { q: "Can a fish walk on legs?", left: "YES", right: "NO", ans: false, expl: "Fish swim with fins, no legs!" },
-      { q: "Does a car have wheels?", left: "YES", right: "NO", ans: true, expl: "A car has four wheels!" },
-      { q: "Is an elephant very tiny?", left: "YES", right: "NO", ans: false, expl: "An elephant is huge, not tiny!" },
-      { q: "Do we sleep at night?", left: "YES", right: "NO", ans: true, expl: "We go to bed and sleep at night!" },
-      { q: "Can an apple swim in the pool?", left: "YES", right: "NO", ans: false, expl: "Apples cannot swim!" },
-      { q: "Does a dog bark woof woof?", left: "YES", right: "NO", ans: true, expl: "Dogs bark woof woof!" },
-      { q: "Is fire hot?", left: "YES", right: "NO", ans: true, expl: "Fire is very hot!" },
-      { q: "Can a cat climb a tree?", left: "YES", right: "NO", ans: true, expl: "Cats love climbing tall trees!" },
-      { q: "Is the sun cold like snow?", left: "YES", right: "NO", ans: false, expl: "The sun is hot and bright!" },
-      { q: "Do rabbits have long ears?", left: "YES", right: "NO", ans: true, expl: "Rabbits have two long ears!" },
-      { q: "Does candy grow on trees?", left: "YES", right: "NO", ans: false, expl: "Candy does not grow on trees!" },
-      { q: "Do we wear shoes on our feet?", left: "YES", right: "NO", ans: true, expl: "We wear shoes on our feet!" },
-      { q: "Can a turtle run faster than a car?", left: "YES", right: "NO", ans: false, expl: "Turtles walk very slowly!" },
-      { q: "Do ducks like swimming in water?", left: "YES", right: "NO", ans: true, expl: "Ducks love swimming in water!" },
-      { q: "Is a rock soft like a pillow?", left: "YES", right: "NO", ans: false, expl: "Rocks are hard, pillows are soft!" },
-      { q: "Is a giraffe very tall?", left: "YES", right: "NO", ans: true, expl: "Giraffes have very long necks!" },
-      { q: "Do fish breathe underwater?", left: "YES", right: "NO", ans: true, expl: "Fish breathe underwater!" },
-      { q: "Can a bicycle fly over the moon?", left: "YES", right: "NO", ans: false, expl: "Bicycles ride on the ground!" },
-      { q: "Is a lemon sour?", left: "YES", right: "NO", ans: true, expl: "Lemons are sour and yellow!" },
-      { q: "Do snakes have arms and legs?", left: "YES", right: "NO", ans: false, expl: "Snakes slither with no legs!" },
-      { q: "When you are thirsty, do you drink water?", left: "YES", right: "NO", ans: true, expl: "Water is great when you are thirsty!" }
+      { q: "Is a pig bigger than a mouse?", ans: true, expl: "A pig is much bigger than a mouse!" },
+      { q: "Can a bird fly in the sky?", ans: true, expl: "Birds have wings to fly high!" },
+      { q: "Does a cow drink coffee?", ans: false, expl: "Cows drink water, not coffee!" },
+      { q: "Is ice cream cold?", ans: true, expl: "Ice cream is very cold and sweet!" },
+      { q: "Can a fish walk on legs?", ans: false, expl: "Fish swim with fins, no legs!" },
+      { q: "Does a car have wheels?", ans: true, expl: "A car has four wheels!" },
+      { q: "Is an elephant very tiny?", ans: false, expl: "An elephant is huge, not tiny!" },
+      { q: "Do we sleep at night?", ans: true, expl: "We go to bed and sleep at night!" },
+      { q: "Can an apple swim in the pool?", ans: false, expl: "Apples cannot swim!" },
+      { q: "Does a dog bark woof woof?", ans: true, expl: "Dogs bark woof woof!" },
+      { q: "Is fire hot?", ans: true, expl: "Fire is very hot!" },
+      { q: "Can a cat climb a tree?", ans: true, expl: "Cats love climbing tall trees!" },
+      { q: "Is the sun cold like snow?", ans: false, expl: "The sun is hot and bright!" },
+      { q: "Do rabbits have long ears?", ans: true, expl: "Rabbits have two long ears!" },
+      { q: "Does candy grow on trees?", ans: false, expl: "Candy does not grow on trees!" },
+      { q: "Do we wear shoes on our feet?", ans: true, expl: "We wear shoes on our feet!" },
+      { q: "Can a turtle run faster than a car?", ans: false, expl: "Turtles walk very slowly!" },
+      { q: "Do ducks like swimming in water?", ans: true, expl: "Ducks love swimming in water!" },
+      { q: "Is a rock soft like a pillow?", ans: false, expl: "Rocks are hard, pillows are soft!" },
+      { q: "Is a giraffe very tall?", ans: true, expl: "Giraffes have very long necks!" },
+      { q: "Do fish breathe underwater?", ans: true, expl: "Fish breathe underwater!" },
+      { q: "Can a bicycle fly over the moon?", ans: false, expl: "Bicycles ride on the ground!" },
+      { q: "Is a lemon sour?", ans: true, expl: "Lemons are sour and yellow!" },
+      { q: "Do snakes have arms and legs?", ans: false, expl: "Snakes slither with no legs!" },
+      { q: "When you are thirsty, do you drink water?", ans: true, expl: "Water is great when you are thirsty!" }
     ];
 
-    // Celebratory spoken phrases (varied)
+    // Celebratory spoken phrases
     const PRAISES = [
       "Bingo!",
       "Super!",
@@ -788,8 +659,8 @@
 
     let isSensorsListening = false;
     let isCoolingDown = false;
-    let isGameLocked = false; // Prevents double answers during transition
-    let hasReturnedToCenter = true; // Must return upright before next tilt can trigger
+    let isGameLocked = false;
+    let hasReturnedToCenter = true;
 
     // Game Session State
     let gameQuestions = [];
@@ -800,26 +671,20 @@
     const synth = window.speechSynthesis;
     let audioCtx = null;
 
-    // DOM Elements - Navigation & Views
+    // DOM Elements - Views
     const homeView = document.getElementById('home-view');
     const gameView = document.getElementById('game-view');
     const testView = document.getElementById('test-view');
 
-    // DOM Elements - Game
-    const gameProgressLabel = document.getElementById('game-progress-label');
-    const gameScoreLabel = document.getElementById('game-score-label');
-    const gameQuestionText = document.getElementById('game-question-text');
-    const gameOptionsSpoken = document.getElementById('game-options-spoken');
-    const speakingIndicator = document.getElementById('speaking-indicator');
-    const btnOptionLeft = document.getElementById('btn-option-left');
-    const btnOptionRight = document.getElementById('btn-option-right');
-    const steeringCarIcon = document.getElementById('steering-car-icon');
+    // DOM Elements - Game Arrows
+    const arrowLeft = document.getElementById('arrow-left');
+    const arrowRight = document.getElementById('arrow-right');
 
-    // DOM Elements - Sensitivity
+    // DOM Elements - Sensitivity Controls
     const homeTiltSlider = document.getElementById('home-tilt-slider');
     const homeTiltBadge = document.getElementById('home-tilt-badge');
 
-    // DOM Elements - Testing
+    // DOM Elements - Testing View
     const testDisplayCard = document.getElementById('test-display-card');
     const testMotionIcon = document.getElementById('test-motion-icon');
     const testMotionText = document.getElementById('test-motion-text');
@@ -831,11 +696,11 @@
     const valGravZ = document.getElementById('val-gravz');
     const valThreshold = document.getElementById('val-threshold');
 
-    // Initialize Sensitivity Controls
+    // Initialize Sensitivity
     syncSensitivityUI(tiltAngleThreshold);
 
     // =========================================================
-    // 3. WEB AUDIO API - VARIED PROCEDURAL SOUND EFFECTS
+    // 3. WEB AUDIO API - 5 PROCEDURAL SOUND EFFECTS
     // =========================================================
     function getAudioContext() {
       if (!audioCtx) {
@@ -850,8 +715,7 @@
       return audioCtx;
     }
 
-    // Play a single clean synthesized chime tone
-    function playTone(freq, type = 'sine', startTime = 0, duration = 0.35, gainLevel = 0.3) {
+    function playTone(freq, type = 'sine', startTime = 0, duration = 0.35, gainLevel = 0.35) {
       const ctx = getAudioContext();
       if (!ctx) return;
 
@@ -871,19 +735,18 @@
       osc.stop(ctx.currentTime + startTime + duration + 0.05);
     }
 
-    // 5 VARIED CELEBRATION SOUNDS:
     function playRandomCelebrationSound() {
       const choice = Math.floor(Math.random() * 5);
       switch(choice) {
         case 0:
           // Sound 1: Bright Major Arpeggio (C5 -> E5 -> G5 -> C6)
-          playTone(523.25, 'triangle', 0.0, 0.25, 0.35); // C5
-          playTone(659.25, 'triangle', 0.1, 0.25, 0.35); // E5
-          playTone(783.99, 'triangle', 0.2, 0.25, 0.35); // G5
-          playTone(1046.50, 'sine', 0.32, 0.5, 0.4);     // C6
+          playTone(523.25, 'triangle', 0.0, 0.25, 0.35);
+          playTone(659.25, 'triangle', 0.1, 0.25, 0.35);
+          playTone(783.99, 'triangle', 0.2, 0.25, 0.35);
+          playTone(1046.50, 'sine', 0.32, 0.5, 0.4);
           break;
         case 1:
-          // Sound 2: Magical Star Twinkle (High Bell Sparkle)
+          // Sound 2: Magical Star Twinkle
           playTone(783.99, 'sine', 0.0, 0.2, 0.3);
           playTone(987.77, 'sine', 0.08, 0.2, 0.3);
           playTone(1174.66, 'sine', 0.16, 0.25, 0.35);
@@ -913,7 +776,6 @@
       }
     }
 
-    // Gentle, non-punishing "Try Again" sound (Warm downward plink)
     function playTryAgainSound() {
       playTone(400, 'sine', 0.0, 0.2, 0.25);
       playTone(320, 'sine', 0.15, 0.3, 0.25);
@@ -931,10 +793,9 @@
       synth.cancel();
 
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = 0.95; // Clear and gently paced for 7-year-old ESL
-      utterance.pitch = 1.1; // Friendly and upbeat
+      utterance.rate = 0.95; // Gently paced for ESL listening
+      utterance.pitch = 1.1;
 
-      // Pick an English voice
       const voices = synth.getVoices();
       const enVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Samantha')));
       if (enVoice) {
@@ -944,15 +805,11 @@
         if (anyEn) utterance.voice = anyEn;
       }
 
-      speakingIndicator.classList.add('active');
-
       utterance.onend = () => {
-        speakingIndicator.classList.remove('active');
         if (onComplete) onComplete();
       };
 
       utterance.onerror = () => {
-        speakingIndicator.classList.remove('active');
         if (onComplete) onComplete();
       };
 
@@ -983,7 +840,6 @@
     async function ensureSensorsAndAudio() {
       getAudioContext();
 
-      // iOS permission handler
       if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
         try {
           const orientationPerm = await DeviceOrientationEvent.requestPermission();
@@ -1018,51 +874,42 @@
     }
 
     // =========================================================
-    // 6. GAME LOGIC & FLOW
+    // 6. GAME LOGIC (PURE AUDIO + TILT CONTROL)
     // =========================================================
     function initGameSession() {
-      // Shuffle questions
       gameQuestions = [...QUESTIONS_BANK].sort(() => 0.5 - Math.random()).slice(0, 15);
       currentQuestionIndex = 0;
       gameScore = 0;
       isGameLocked = false;
       hasReturnedToCenter = true;
 
-      gameScoreLabel.textContent = `⭐ ${gameScore}`;
       presentCurrentQuestion();
     }
 
     function presentCurrentQuestion() {
       if (currentQuestionIndex >= gameQuestions.length) {
-        // Game complete!
         playRandomCelebrationSound();
-        gameQuestionText.textContent = "🎉 Awesome job! You completed all questions!";
-        gameOptionsSpoken.textContent = `Final Score: ${gameScore} stars!`;
-        speak(`Awesome job! You finished the game and earned ${gameScore} stars! Tap screen to play again.`);
+        speak(`Awesome job! You finished the game and earned ${gameScore} stars! Tap anywhere to play again.`);
         return;
       }
 
       const qObj = gameQuestions[currentQuestionIndex];
-      gameProgressLabel.textContent = `Question ${currentQuestionIndex + 1} / ${gameQuestions.length}`;
-      gameQuestionText.textContent = `"${qObj.q}"`;
-      gameOptionsSpoken.textContent = `"Left for yes. Right for no."`;
 
-      // Reset option highlights
-      btnOptionLeft.className = "option-btn left";
-      btnOptionRight.className = "option-btn right";
+      // Reset visual arrow states
+      arrowLeft.className = "arrow-icon-wrapper left";
+      arrowRight.className = "arrow-icon-wrapper right";
 
       isGameLocked = false;
 
-      // Speak question clearly with pauses
+      // Speak question and binary choices out loud
       const fullSpeech = `${qObj.q} ... Left for yes. Right for no.`;
       speak(fullSpeech);
     }
 
-    // Tap anywhere on screen to repeat question
+    // Tap anywhere on the screen repeats the audio question
     function onGameScreenTap(event) {
       if (currentView !== 'game') return;
 
-      // If finished, restart
       if (currentQuestionIndex >= gameQuestions.length) {
         initGameSession();
         return;
@@ -1074,7 +921,7 @@
       speak(`Listen again: ${qObj.q} ... Left for yes, right for no.`);
     }
 
-    // Called when user tilts or taps Left / Right
+    // Evaluate answer triggered by Left or Right Tilt
     function evaluateAnswer(userPickedYes) {
       if (isGameLocked || currentView !== 'game') return;
       if (currentQuestionIndex >= gameQuestions.length) return;
@@ -1084,27 +931,22 @@
 
       isGameLocked = true; // Lock until next question
 
+      // Visual flash on corresponding arrow
       if (userPickedYes) {
-        btnOptionLeft.classList.add(isCorrect ? 'correct-highlight' : 'wrong-highlight');
+        arrowLeft.classList.add(isCorrect ? 'correct-flash' : 'wrong-flash');
       } else {
-        btnOptionRight.classList.add(isCorrect ? 'correct-highlight' : 'wrong-highlight');
+        arrowRight.classList.add(isCorrect ? 'correct-flash' : 'wrong-flash');
       }
 
       if (isCorrect) {
-        // Correct Answer!
         gameScore++;
-        gameScoreLabel.textContent = `⭐ ${gameScore}`;
-
-        // 1. Play randomized celebration sound
         playRandomCelebrationSound();
 
-        // 2. Speak randomized encouragement + brief confirmation
         const randomPraise = PRAISES[Math.floor(Math.random() * PRAISES.length)];
         const confirmation = `${randomPraise} ${qObj.expl}`;
 
         setTimeout(() => {
           speak(confirmation, () => {
-            // Next question after speaking
             setTimeout(() => {
               currentQuestionIndex++;
               presentCurrentQuestion();
@@ -1113,26 +955,19 @@
         }, 350);
 
       } else {
-        // Gentle Try Again
         playTryAgainSound();
 
         setTimeout(() => {
           speak("Oops! Let's try again.", () => {
             setTimeout(() => {
-              btnOptionLeft.className = "option-btn left";
-              btnOptionRight.className = "option-btn right";
+              arrowLeft.className = "arrow-icon-wrapper left";
+              arrowRight.className = "arrow-icon-wrapper right";
               isGameLocked = false;
-              // Re-prompt
               presentCurrentQuestion();
             }, 500);
           });
         }, 350);
       }
-    }
-
-    function handleManualChoice(userPickedYes, event) {
-      if (event) event.stopPropagation();
-      evaluateAnswer(userPickedYes);
     }
 
     // =========================================================
@@ -1144,42 +979,38 @@
       const gamma = event.gamma || 0; // Left (-) to Right (+)
       const beta = event.beta || 0;
 
-      // Update Debug values if in Testing view
       if (currentView === 'test') {
         valGamma.textContent = gamma.toFixed(1) + '°';
         valBeta.textContent = beta.toFixed(1) + '°';
       }
 
-      // Smooth Car steering icon visual
-      const clampedAngle = Math.max(-45, Math.min(45, gamma));
-      steeringCarIcon.style.transform = `rotate(${clampedAngle * 0.7}deg)`;
-
-      // Check center return (user must bring phone back upright between answers)
+      // Check center return (bring phone upright between tilts)
       if (Math.abs(gamma) < 18) {
         hasReturnedToCenter = true;
-        btnOptionLeft.classList.remove('tilted');
-        btnOptionRight.classList.remove('tilted');
+        if (!isGameLocked) {
+          arrowLeft.classList.remove('active-tilt');
+          arrowRight.classList.remove('active-tilt');
+        }
       }
 
-      // --- GAME MODE HANDLING ---
+      // --- GAME MODE (TILTING ONLY) ---
       if (currentView === 'game') {
         if (!isGameLocked && hasReturnedToCenter) {
           if (gamma < -tiltAngleThreshold) {
             hasReturnedToCenter = false;
-            btnOptionLeft.classList.add('tilted');
+            arrowLeft.classList.add('active-tilt');
             evaluateAnswer(true); // Tilt Left = YES
           } else if (gamma > tiltAngleThreshold) {
             hasReturnedToCenter = false;
-            btnOptionRight.classList.add('tilted');
+            arrowRight.classList.add('active-tilt');
             evaluateAnswer(false); // Tilt Right = NO
           }
         }
         return;
       }
 
-      // --- TESTING MODE HANDLING ---
+      // --- TESTING MODE ---
       if (currentView === 'test') {
-        // Face up return
         if (wasFaceDown && Math.abs(beta) < 60) {
           wasFaceDown = false;
           triggerTestAction("Face Up!", "Flipped face up", "📱");
@@ -1205,7 +1036,7 @@
     let lastGrav = { x: null, y: null, z: null, time: 0 };
 
     function handleMotion(event) {
-      if (currentView !== 'test') return; // Only process acceleration in Testing view
+      if (currentView !== 'test') return;
 
       let x = 0;
       let y = 0;
@@ -1312,7 +1143,6 @@
       speak("Testing voice. The sound and audio are ready!");
     }
 
-    // Preload speech synthesis voices
     if ('speechSynthesis' in window) {
       window.speechSynthesis.onvoiceschanged = () => {
         window.speechSynthesis.getVoices();
