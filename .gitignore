@@ -1,0 +1,7 @@
+# Local SSL certificates
+cert.pem
+key.pem
+
+# Python
+__pycache__/
+*.pyc

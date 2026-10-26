@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Motion & Tilt Voice Detector</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #0f172a;
+      color: #f8fafc;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.5rem;
+      text-align: center;
+      overflow-x: hidden;
+    }
+
+    header {
+      margin-top: 1rem;
+    }
+
+    h1 {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: #38bdf8;
+      margin-bottom: 0.3rem;
+    }
+
+    p.subtitle {
+      font-size: 0.95rem;
+      color: #94a3b8;
+    }
+
+    /* Big Status Display */
+    .display-card {
+      background: #1e293b;
+      border: 3px solid #334155;
+      border-radius: 28px;
+      width: 100%;
+      max-width: 420px;
+      height: 280px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      transition: all 0.25s ease;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+    }
+
+    .display-card.active {
+      border-color: #38bdf8;
+      box-shadow: 0 0 35px rgba(56, 189, 248, 0.5);
+      transform: scale(1.03);
+    }
+
+    .motion-icon {
+      font-size: 5rem;
+      line-height: 1;
+      margin-bottom: 0.8rem;
+      transition: transform 0.2s ease;
+    }
+
+    .motion-text {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #f1f5f9;
+      letter-spacing: 0.5px;
+    }
+
+    .cooldown-bar-container {
+      width: 80%;
+      height: 8px;
+      background: #334155;
+      border-radius: 4px;
+      margin-top: 1.2rem;
+      overflow: hidden;
+    }
+
+    .cooldown-bar {
+      height: 100%;
+      width: 0%;
+      background: #38bdf8;
+      transition: width 0.1s linear;
+    }
+
+    /* Start / Permission Overlay */
+    #start-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 23, 42, 0.95);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 2rem;
+    }
+
+    .btn-start {
+      background: linear-gradient(135deg, #0284c7, #2563eb);
+      color: white;
+      font-size: 1.6rem;
+      font-weight: 800;
+      border: none;
+      border-radius: 9999px;
+      padding: 1.2rem 2.8rem;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(37, 99, 235, 0.5);
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
+
+    .btn-start:active {
+      transform: scale(0.96);
+    }
+
+    /* Sensor Debug Data */
+    .debug-box {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 14px;
+      padding: 0.8rem 1rem;
+      font-family: monospace;
+      font-size: 0.8rem;
+      color: #94a3b8;
+      width: 100%;
+      max-width: 420px;
+      text-align: left;
+      margin-top: 1rem;
+    }
+
+    .debug-row {
+      display: flex;
+      justify-content: space-between;
+      margin: 0.2rem 0;
+    }
+
+    .val-highlight {
+      color: #38bdf8;
+      font-weight: bold;
+    }
+
+    /* Audio Toggle */
+    .controls {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+    }
+
+    .btn-pill {
+      background: #334155;
+      color: #cbd5e1;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-pill:active {
+      background: #475569;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Startup Screen (Needed to unlock Speech & Sensors on mobile) -->
+  <div id="start-overlay">
+    <div style="font-size: 4rem; margin-bottom: 1.5rem;">🎮 🚗</div>
+    <h2 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 0.5rem; color: #f8fafc;">Motion Detector</h2>
+    <p style="color: #94a3b8; margin-bottom: 2rem; max-width: 320px;">
+      Tap the button below to enable speech and motion sensors.
+    </p>
+    <button class="btn-start" id="btn-start" onclick="startApp()">Start</button>
+  </div>
+
+  <header>
+    <h1>Motion Voice Tester</h1>
+    <p class="subtitle">Try tilting, shaking, or flipping your phone</p>
+  </header>
+
+  <!-- Big Central Display -->
+  <div class="display-card" id="display-card">
+    <div class="motion-icon" id="motion-icon">📱</div>
+    <div class="motion-text" id="motion-text">Ready! Move phone...</div>
+    <div class="cooldown-bar-container">
+      <div class="cooldown-bar" id="cooldown-bar"></div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn-pill" onclick="testVoice()">🔊 Test Voice</button>
+    <button class="btn-pill" onclick="toggleDebug()">⚙️ Toggle Values</button>
+  </div>
+
+  <!-- Live Debug Panel -->
+  <div class="debug-box" id="debug-box" style="display: none;">
+    <div class="debug-row">
+      <span>Tilt Left/Right (Gamma):</span>
+      <span class="val-highlight" id="val-gamma">0°</span>
+    </div>
+    <div class="debug-row">
+      <span>Tilt Front/Back (Beta):</span>
+      <span class="val-highlight" id="val-beta">0°</span>
+    </div>
+    <div class="debug-row">
+      <span>Shake Left/Right (Acc X):</span>
+      <span class="val-highlight" id="val-accx">0</span>
+    </div>
+    <div class="debug-row">
+      <span>Shake Up/Down (Acc Y):</span>
+      <span class="val-highlight" id="val-accy">0</span>
+    </div>
+    <div class="debug-row">
+      <span>Gravity Z (Face up/down):</span>
+      <span class="val-highlight" id="val-gravz">0</span>
+    </div>
+  </div>
+
+  <script>
+    // --- Configuration & Thresholds ---
+    const TILT_ANGLE_THRESHOLD = 32;       // Degrees tilt left/right
+    const SHAKE_THRESHOLD = 17;           // Force for shake (m/s^2)
+    const COOLDOWN_MS = 1400;              // Cooldown between voice detections to avoid spamming
+
+    let isAppStarted = false;
+    let isCoolingDown = false;
+    let lastSpokenText = "";
+    let synth = window.speechSynthesis;
+
+    // UI Elements
+    const displayCard = document.getElementById('display-card');
+    const motionIcon = document.getElementById('motion-icon');
+    const motionText = document.getElementById('motion-text');
+    const cooldownBar = document.getElementById('cooldown-bar');
+    const startOverlay = document.getElementById('start-overlay');
+
+    // Debug elements
+    const valGamma = document.getElementById('val-gamma');
+    const valBeta = document.getElementById('val-beta');
+    const valAccX = document.getElementById('val-accx');
+    const valAccY = document.getElementById('val-accy');
+    const valGravZ = document.getElementById('val-gravz');
+
+    // --- Start / Permission Handler ---
+    async function startApp() {
+      // 1. Request iOS permission if available
+      if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+        try {
+          const orientationPerm = await DeviceOrientationEvent.requestPermission();
+          const motionPerm = await DeviceMotionEvent.requestPermission();
+          if (orientationPerm !== 'granted' || motionPerm !== 'granted') {
+            alert('Sensor permission is required for motion detection.');
+            return;
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      // 2. Unlock Speech Synthesis on Android / iOS
+      speak("Ready! Move your phone.");
+
+      // 3. Start listeners
+      window.addEventListener('deviceorientation', handleOrientation, true);
+      window.addEventListener('devicemotion', handleMotion, true);
+
+      // Hide overlay
+      startOverlay.style.display = 'none';
+      isAppStarted = true;
+    }
+
+    // --- Text-To-Speech Function ---
+    function speak(text) {
+      if (!('speechSynthesis' in window)) return;
+
+      // Stop previous utterance
+      synth.cancel();
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 1.05; // Slightly clear and lively for kids
+      utterance.pitch = 1.1;
+
+      // Try picking an English voice if available
+      const voices = synth.getVoices();
+      const enVoice = voices.find(v => v.lang.startsWith('en'));
+      if (enVoice) {
+        utterance.voice = enVoice;
+      }
+
+      synth.speak(utterance);
+    }
+
+    function triggerAction(actionName, speechVoice, icon) {
+      if (isCoolingDown) return;
+
+      isCoolingDown = true;
+      lastSpokenText = speechVoice;
+
+      // Update UI
+      motionIcon.textContent = icon;
+      motionText.textContent = actionName;
+      displayCard.classList.add('active');
+
+      // Speak detected action
+      speak(speechVoice);
+
+      // Cooldown progress animation
+      cooldownBar.style.transition = 'none';
+      cooldownBar.style.width = '100%';
+
+      setTimeout(() => {
+        cooldownBar.style.transition = `width ${COOLDOWN_MS}ms linear`;
+        cooldownBar.style.width = '0%';
+      }, 50);
+
+      setTimeout(() => {
+        isCoolingDown = false;
+        displayCard.classList.remove('active');
+      }, COOLDOWN_MS);
+    }
+
+    // --- 1. Orientation Handler (Tilt Left / Right, Face Down, Face Up) ---
+    let wasFaceDown = false;
+
+    function handleOrientation(event) {
+      const gamma = event.gamma || 0; // Left (-90) to Right (+90)
+      const beta = event.beta || 0;   // Front (-180) to Back (+180)
+
+      valGamma.textContent = gamma.toFixed(1) + '°';
+      valBeta.textContent = beta.toFixed(1) + '°';
+
+      // Check Face Up return
+      if (wasFaceDown && Math.abs(beta) < 60) {
+        wasFaceDown = false;
+        triggerAction("Face Up!", "Flipped face up", "📱");
+        return;
+      }
+
+      if (isCoolingDown) return;
+
+      // Face-down detection: beta angle flipped past 140 degrees
+      if (Math.abs(beta) > 135) {
+        wasFaceDown = true;
+        triggerAction("Face Down!", "Flipped face down", "🔄");
+        return;
+      }
+
+      // Tilt Left vs Right
+      if (gamma < -TILT_ANGLE_THRESHOLD) {
+        triggerAction("Tilt Left!", "Tilt left", "⬅️");
+      } else if (gamma > TILT_ANGLE_THRESHOLD) {
+        triggerAction("Tilt Right!", "Tilt right", "➡️");
+      }
+    }
+
+    // --- 2. Motion Handler (Shake Left / Right & Shake Up / Down) ---
+    let lastGrav = { x: null, y: null, z: null, time: 0 };
+
+    function handleMotion(event) {
+      let x = 0;
+      let y = 0;
+
+      // Primary: Use acceleration without gravity if supported
+      if (event.acceleration && event.acceleration.x !== null) {
+        x = Math.abs(event.acceleration.x || 0);
+        y = Math.abs(event.acceleration.y || 0);
+        valAccX.textContent = (event.acceleration.x || 0).toFixed(1);
+        valAccY.textContent = (event.acceleration.y || 0).toFixed(1);
+      } 
+      // Fallback: Calculate delta on accelerationIncludingGravity (works on all Android phones)
+      else if (event.accelerationIncludingGravity) {
+        const cur = event.accelerationIncludingGravity;
+        const now = performance.now();
+        if (lastGrav.x !== null) {
+          const dt = (now - lastGrav.time) / 1000 || 0.02;
+          if (dt > 0.005) {
+            // Instantaneous delta
+            x = Math.abs(cur.x - lastGrav.x);
+            y = Math.abs(cur.y - lastGrav.y);
+            valAccX.textContent = `Δ${x.toFixed(1)}`;
+            valAccY.textContent = `Δ${y.toFixed(1)}`;
+          }
+        }
+        lastGrav = { x: cur.x || 0, y: cur.y || 0, z: cur.z || 0, time: now };
+      }
+
+      const accGrav = event.accelerationIncludingGravity;
+      if (accGrav && accGrav.z !== null) {
+        valGravZ.textContent = accGrav.z.toFixed(1);
+        // Face down backup via gravity Z
+        if (!isCoolingDown && !wasFaceDown && accGrav.z < -7 && Math.abs(accGrav.x || 0) < 4) {
+          wasFaceDown = true;
+          triggerAction("Face Down!", "Flipped face down", "🔄");
+          return;
+        }
+      }
+
+      if (isCoolingDown) return;
+
+      // Check for Shake Left/Right vs Shake Up/Down
+      if (x > SHAKE_THRESHOLD && x > y * 1.25) {
+        triggerAction("Shake Left & Right!", "Shake left and right", "📳");
+      } else if (y > SHAKE_THRESHOLD && y > x * 1.25) {
+        triggerAction("Shake Up & Down!", "Shake up and down", "↕️");
+      }
+    }
+
+    // --- Utilities ---
+    function testVoice() {
+      speak("Testing voice. Speech is working perfectly!");
+    }
+
+    function toggleDebug() {
+      const debugBox = document.getElementById('debug-box');
+      debugBox.style.display = debugBox.style.display === 'none' ? 'block' : 'none';
+    }
+
+    // Preload speech synthesis voices
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.onvoiceschanged = () => {
+        window.speechSynthesis.getVoices();
+      };
+    }
+  </script>
+</body>
+</html>
