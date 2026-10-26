@@ -106,7 +106,7 @@
       display: flex;
       flex-direction: column;
       gap: 0.9rem;
-      margin: 1.4rem 0;
+      margin: 1.6rem 0;
     }
 
     .menu-card {
@@ -180,105 +180,10 @@
       color: #0f172a !important;
     }
 
-    /* Sensitivity Settings Card */
-    .sensitivity-card {
-      background: #1e293b;
-      border: 2px solid #334155;
-      border-radius: 18px;
-      width: 100%;
-      padding: 0.9rem 1.1rem;
-      margin: 0.5rem 0;
-      text-align: left;
-    }
-
-    .sensitivity-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.4rem;
-    }
-
-    .sensitivity-title {
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: #f8fafc;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-
-    .sensitivity-badge {
-      background: #0284c7;
-      color: white;
-      font-size: 0.95rem;
-      font-weight: 800;
-      padding: 0.12rem 0.55rem;
-      border-radius: 9999px;
-      font-family: monospace;
-    }
-
-    .slider-container {
-      margin: 0.5rem 0 0.25rem 0;
-    }
-
-    input[type=range] {
-      -webkit-appearance: none;
-      width: 100%;
-      height: 10px;
-      border-radius: 5px;
-      background: #334155;
-      outline: none;
-    }
-
-    input[type=range]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #38bdf8, #0284c7);
-      cursor: pointer;
-      box-shadow: 0 0 10px rgba(56, 189, 248, 0.7);
-      border: 2px solid white;
-    }
-
-    .slider-labels {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.72rem;
-      color: #64748b;
-      margin-top: 0.25rem;
-    }
-
-    .preset-row {
-      display: flex;
-      gap: 0.4rem;
-      margin-top: 0.6rem;
-    }
-
-    .btn-preset {
-      flex: 1;
-      background: #334155;
-      color: #cbd5e1;
-      border: 1px solid #475569;
-      border-radius: 8px;
-      padding: 0.38rem 0.2rem;
-      font-size: 0.72rem;
-      font-weight: 600;
-      cursor: pointer;
-      text-align: center;
-    }
-
-    .btn-preset.active {
-      background: #0369a1;
-      color: #ffffff;
-      border-color: #38bdf8;
-    }
-
     .home-footer-info {
       font-size: 0.78rem;
       color: #64748b;
-      margin-top: 0.4rem;
+      margin-top: 0.8rem;
     }
 
     /* =========================================
@@ -504,12 +409,12 @@
         </div>
       </div>
 
-      <!-- Option 2: 九九乘法 (Traditional Chinese) -->
+      <!-- Option 2: 九九乘法 (Traditional Chinese Neural Voice) -->
       <div class="menu-card math-zh" onclick="launchMultiplicationGame()">
         <div class="menu-card-icon">🧮</div>
         <div class="menu-card-info">
-          <h2>九九乘法 <span class="badge-recommend badge-math">中文語音</span></h2>
-          <p>「3乘以5等於？」左邊：15，右邊：20。40題乘法表聽力訓練！</p>
+          <h2>九九乘法 <span class="badge-recommend badge-math">溫柔大姐姐真人語音</span></h2>
+          <p>「3乘以5等於多少呢？」溫柔大姐姐原聲陪伴，40題乘法表聽力訓練！</p>
         </div>
       </div>
 
@@ -518,13 +423,13 @@
         <div class="menu-card-icon">🔧</div>
         <div class="menu-card-info">
           <h2>Testing Environment</h2>
-          <p>測試傾斜角度、感應器即時數值與車用靈敏度校正。</p>
+          <p>測試傾斜角度（固定 65° 車用門檻）與即時感應器數值。</p>
         </div>
       </div>
     </div>
 
     <div class="home-footer-info">
-      <span>🛡️ 零螢幕眩光干擾 • 專注於聽力練習</span>
+      <span>🛡️ 固定 65° 車用防誤觸門檻 • 零螢幕眩光干擾</span>
     </div>
   </div>
 
@@ -565,7 +470,7 @@
       </button>
       <span class="nav-title">Testing Environment</span>
       <button class="btn-nav-back" onclick="testVoice()">
-        🔊 測試聲音
+        🔊 測試英文
       </button>
     </div>
 
@@ -585,7 +490,7 @@
       </div>
       <div class="debug-row">
         <span>Current Tilt Threshold:</span>
-        <span class="val-highlight" id="val-threshold">±48°</span>
+        <span class="val-highlight" id="val-threshold">±65°</span>
       </div>
       <div class="debug-row">
         <span>Tilt Front/Back (Beta):</span>
@@ -607,7 +512,7 @@
 
     <div class="controls-row">
       <button class="btn-action" onclick="testVoice()">🔊 測試英文</button>
-      <button class="btn-action" onclick="testVoiceZh()">🔊 測試中文</button>
+      <button class="btn-action" onclick="testVoiceZh()">🔊 測試大姐姐原聲</button>
       <button class="btn-action" onclick="playRandomCelebrationSound()">🎵 測試音效</button>
     </div>
   </div>
@@ -677,51 +582,50 @@
       { q: "Where do we wear our shoes?", left: "on our heads", right: "on our feet", ans: "right", expl: "We wear shoes on our feet!" }
     ];
 
-    // C. 九九乘法 40 題題庫 (Traditional Chinese)
+    // C. 九九乘法 40 題題庫 (搭配專屬 Neural MP3 音檔)
     const MULTIPLICATION_QUESTIONS = [
-      { q: "2乘以3等於？", left: "6", right: "8", ans: "left", expl: "2乘以3等於6！" },
-      { q: "2乘以4等於？", left: "6", right: "8", ans: "right", expl: "2乘以4等於8！" },
-      { q: "2乘以6等於？", left: "12", right: "14", ans: "left", expl: "2乘以6等於12！" },
-      { q: "2乘以7等於？", left: "16", right: "14", ans: "right", expl: "2乘以7等於14！" },
-      { q: "2乘以8等於？", left: "16", right: "18", ans: "left", expl: "2乘以8等於16！" },
-      { q: "3乘以2等於？", left: "5", right: "6", ans: "right", expl: "3乘以2等於6！" },
-      { q: "3乘以3等於？", left: "9", right: "6", ans: "left", expl: "3乘以3等於9！" },
-      { q: "3乘以4等於？", left: "15", right: "12", ans: "right", expl: "3乘以4等於12！" },
-      { q: "3乘以5等於？", left: "15", right: "20", ans: "left", expl: "3乘以5等於15！" },
-      { q: "3乘以6等於？", left: "16", right: "18", ans: "right", expl: "3乘以6等於18！" },
-      { q: "3乘以7等於？", left: "21", right: "24", ans: "left", expl: "3乘以7等於21！" },
-      { q: "3乘以8等於？", left: "27", right: "24", ans: "right", expl: "3乘以8等於24！" },
-      { q: "4乘以3等於？", left: "12", right: "16", ans: "left", expl: "4乘以3等於12！" },
-      { q: "4乘以4等於？", left: "14", right: "16", ans: "right", expl: "4乘以4等於16！" },
-      { q: "4乘以5等於？", left: "20", right: "25", ans: "left", expl: "4乘以5等於20！" },
-      { q: "4乘以6等於？", left: "28", right: "24", ans: "right", expl: "4乘以6等於24！" },
-      { q: "4乘以7等於？", left: "28", right: "24", ans: "left", expl: "4乘以7等於28！" },
-      { q: "4乘以8等於？", left: "36", right: "32", ans: "right", expl: "4乘以8等於32！" },
-      { q: "5乘以2等於？", left: "10", right: "15", ans: "left", expl: "5乘以2等於10！" },
-      { q: "5乘以3等於？", left: "12", right: "15", ans: "right", expl: "5乘以3等於15！" },
-      { q: "5乘以4等於？", left: "20", right: "24", ans: "left", expl: "5乘以4等於20！" },
-      { q: "5乘以5等於？", left: "30", right: "25", ans: "right", expl: "5乘以5等於25！" },
-      { q: "5乘以6等於？", left: "30", right: "35", ans: "left", expl: "5乘以6等於30！" },
-      { q: "5乘以7等於？", left: "40", right: "35", ans: "right", expl: "5乘以7等於35！" },
-      { q: "5乘以8等於？", left: "40", right: "45", ans: "left", expl: "5乘以8等於40！" },
-      { q: "6乘以3等於？", left: "18", right: "21", ans: "left", expl: "6乘以3等於18！" },
-      { q: "6乘以4等於？", left: "20", right: "24", ans: "right", expl: "6乘以4等於24！" },
-      { q: "6乘以5等於？", left: "30", right: "36", ans: "left", expl: "6乘以5等於30！" },
-      { q: "6乘以6等於？", left: "32", right: "36", ans: "right", expl: "6乘以6等於36！" },
-      { q: "6乘以7等於？", left: "42", right: "48", ans: "left", expl: "6乘以7等於42！" },
-      { q: "7乘以2等於？", left: "16", right: "14", ans: "right", expl: "7乘以2等於14！" },
-      { q: "7乘以3等於？", left: "21", right: "24", ans: "left", expl: "7乘以3等於21！" },
-      { q: "7乘以4等於？", left: "24", right: "28", ans: "right", expl: "7乘以4等於28！" },
-      { q: "7乘以5等於？", left: "35", right: "30", ans: "left", expl: "7乘以5等於35！" },
-      { q: "7乘以7等於？", left: "42", right: "49", ans: "right", expl: "7乘以7等於49！" },
-      { q: "8乘以2等於？", left: "16", right: "18", ans: "left", expl: "8乘以2等於16！" },
-      { q: "8乘以3等於？", left: "21", right: "24", ans: "right", expl: "8乘以3等於24！" },
-      { q: "8乘以4等於？", left: "32", right: "36", ans: "left", expl: "8乘以4等於32！" },
-      { q: "8乘以5等於？", left: "45", right: "40", ans: "right", expl: "8乘以5等於40！" },
-      { q: "9乘以3等於？", left: "27", right: "24", ans: "left", expl: "9乘以3等於27！" }
+      { id: 1, q: "2乘以3等於？", left: "6", right: "8", ans: "left", expl: "2乘以3等於6！" },
+      { id: 2, q: "2乘以4等於？", left: "6", right: "8", ans: "right", expl: "2乘以4等於8！" },
+      { id: 3, q: "2乘以6等於？", left: "12", right: "14", ans: "left", expl: "2乘以6等於12！" },
+      { id: 4, q: "2乘以7等於？", left: "16", right: "14", ans: "right", expl: "2乘以7等於14！" },
+      { id: 5, q: "2乘以8等於？", left: "16", right: "18", ans: "left", expl: "2乘以8等於16！" },
+      { id: 6, q: "3乘以2等於？", left: "5", right: "6", ans: "right", expl: "3乘以2等於6！" },
+      { id: 7, q: "3乘以3等於？", left: "9", right: "6", ans: "left", expl: "3乘以3等於9！" },
+      { id: 8, q: "3乘以4等於？", left: "15", right: "12", ans: "right", expl: "3乘以4等於12！" },
+      { id: 9, q: "3乘以5等於？", left: "15", right: "20", ans: "left", expl: "3乘以5等於15！" },
+      { id: 10, q: "3乘以6等於？", left: "16", right: "18", ans: "right", expl: "3乘以6等於18！" },
+      { id: 11, q: "3乘以7等於？", left: "21", right: "24", ans: "left", expl: "3乘以7等於21！" },
+      { id: 12, q: "3乘以8等於？", left: "27", right: "24", ans: "right", expl: "3乘以8等於24！" },
+      { id: 13, q: "4乘以3等於？", left: "12", right: "16", ans: "left", expl: "4乘以3等於12！" },
+      { id: 14, q: "4乘以4等於？", left: "14", right: "16", ans: "right", expl: "4乘以4等於16！" },
+      { id: 15, q: "4乘以5等於？", left: "20", right: "25", ans: "left", expl: "4乘以5等於20！" },
+      { id: 16, q: "4乘以6等於？", left: "28", right: "24", ans: "right", expl: "4乘以6等於24！" },
+      { id: 17, q: "4乘以7等於？", left: "28", right: "24", ans: "left", expl: "4乘以7等於28！" },
+      { id: 18, q: "4乘以8等於？", left: "36", right: "32", ans: "right", expl: "4乘以8等於32！" },
+      { id: 19, q: "5乘以2等於？", left: "10", right: "15", ans: "left", expl: "5乘以2等於10！" },
+      { id: 20, q: "5乘以3等於？", left: "12", right: "15", ans: "right", expl: "5乘以3等於15！" },
+      { id: 21, q: "5乘以4等於？", left: "20", right: "24", ans: "left", expl: "5乘以4等於20！" },
+      { id: 22, q: "5乘以5等於？", left: "30", right: "25", ans: "right", expl: "5乘以5等於25！" },
+      { id: 23, q: "5乘以6等於？", left: "30", right: "35", ans: "left", expl: "5乘以6等於30！" },
+      { id: 24, q: "5乘以7等於？", left: "40", right: "35", ans: "right", expl: "5乘以7等於35！" },
+      { id: 25, q: "5乘以8等於？", left: "40", right: "45", ans: "left", expl: "5乘以8等於40！" },
+      { id: 26, q: "6乘以3等於？", left: "18", right: "21", ans: "left", expl: "6乘以3等於18！" },
+      { id: 27, q: "6乘以4等於？", left: "20", right: "24", ans: "right", expl: "6乘以4等於24！" },
+      { id: 28, q: "6乘以5等於？", left: "30", right: "36", ans: "left", expl: "6乘以5等於30！" },
+      { id: 29, q: "6乘以6等於？", left: "32", right: "36", ans: "right", expl: "6乘以6等於36！" },
+      { id: 30, q: "6乘以7等於？", left: "42", right: "48", ans: "left", expl: "6乘以7等於42！" },
+      { id: 31, q: "7乘以2等於？", left: "16", right: "14", ans: "right", expl: "7乘以2等於14！" },
+      { id: 32, q: "7乘以3等於？", left: "21", right: "24", ans: "left", expl: "7乘以3等於21！" },
+      { id: 33, q: "7乘以4等於？", left: "24", right: "28", ans: "right", expl: "7乘以4等於28！" },
+      { id: 34, q: "7乘以5等於？", left: "35", right: "30", ans: "left", expl: "7乘以5等於35！" },
+      { id: 35, q: "7乘以7等於？", left: "42", right: "49", ans: "right", expl: "7乘以7等於49！" },
+      { id: 36, q: "8乘以2等於？", left: "16", right: "18", ans: "left", expl: "8乘以2等於16！" },
+      { id: 37, q: "8乘以3等於？", left: "21", right: "24", ans: "right", expl: "8乘以3等於24！" },
+      { id: 38, q: "8乘以4等於？", left: "32", right: "36", ans: "left", expl: "8乘以4等於32！" },
+      { id: 39, q: "8乘以5等於？", left: "45", right: "40", ans: "right", expl: "8乘以5等於40！" },
+      { id: 40, q: "9乘以3等於？", left: "27", right: "24", ans: "left", expl: "9乘以3等於27！" }
     ];
 
-    // Celebratory spoken phrases (English & Chinese)
     const PRAISES_EN = [
       "Bingo!",
       "Super!",
@@ -730,21 +634,6 @@
       "You got it!",
       "Wonderful!",
       "Spot on!"
-    ];
-
-    const PRAISES_ZH = [
-      "哇，答對了！",
-      "太棒了！算得真快！",
-      "好聰明喔！",
-      "太厲害了！完全正確！",
-      "哇，一級棒！",
-      "好棒喔！算得真好！"
-    ];
-
-    const RETRIES_ZH = [
-      "沒關係喔，我們再想想看，再來試一次！",
-      "差一點點喔，我們再來試一次！",
-      "不急不急，放輕鬆再聽一次喔！"
     ];
 
     // =========================================================
@@ -766,9 +655,10 @@
     let currentQuestionIndex = 0;
     let gameScore = 0;
 
-    // Speech & Audio
+    // Speech & Audio Player
     const synth = window.speechSynthesis;
     let audioCtx = null;
+    let currentAudioObj = null;
 
     // DOM Elements - Views
     const homeView = document.getElementById('home-view');
@@ -778,8 +668,6 @@
     // DOM Elements - Game Arrows
     const arrowLeft = document.getElementById('arrow-left');
     const arrowRight = document.getElementById('arrow-right');
-
-    // DOM Elements - Sensitivity Controls
 
     // DOM Elements - Testing View
     const testDisplayCard = document.getElementById('test-display-card');
@@ -793,15 +681,14 @@
     const valGravZ = document.getElementById('val-gravz');
     const valThreshold = document.getElementById('val-threshold');
 
-    // Initialize Sensitivity
-valThreshold.textContent = "±65°";
+    valThreshold.textContent = "±65°";
 
     function shuffle(arr) {
       return [...arr].sort(() => 0.5 - Math.random());
     }
 
     // =========================================================
-    // 3. WEB AUDIO API - 5 PROCEDURAL SOUND EFFECTS
+    // 3. AUDIO PLAYER (MP3 & PROCEDURAL SOUND EFFECTS)
     // =========================================================
     function getAudioContext() {
       if (!audioCtx) {
@@ -814,6 +701,38 @@ valThreshold.textContent = "±65°";
         audioCtx.resume();
       }
       return audioCtx;
+    }
+
+    // High-Fidelity MP3 Audio Player with fallback
+    function playAudioFile(src, onComplete = null) {
+      stopAllAudio();
+
+      currentAudioObj = new Audio(src);
+      currentAudioObj.onended = () => {
+        currentAudioObj = null;
+        if (onComplete) onComplete();
+      };
+      currentAudioObj.onerror = (e) => {
+        console.warn("Audio file playback error, falling back to TTS:", src, e);
+        currentAudioObj = null;
+        if (onComplete) onComplete();
+      };
+
+      currentAudioObj.play().catch(e => {
+        console.warn("Autoplay block or error:", e);
+        if (onComplete) onComplete();
+      });
+    }
+
+    function stopAllAudio() {
+      if (currentAudioObj) {
+        currentAudioObj.pause();
+        currentAudioObj.currentTime = 0;
+        currentAudioObj = null;
+      }
+      if ('speechSynthesis' in window) {
+        synth.cancel();
+      }
     }
 
     function playTone(freq, type = 'sine', startTime = 0, duration = 0.35, gainLevel = 0.35) {
@@ -878,77 +797,33 @@ valThreshold.textContent = "±65°";
     }
 
     // =========================================================
-    // 4. SPEECH SYNTHESIS ENGINE (TRADITIONAL CHINESE & ENGLISH)
+    // 4. SPEECH SYNTHESIS ENGINE (FOR ENGLISH & TESTING)
     // =========================================================
-    // Select the most natural, gentle female voice available on Android / iOS
-    function getBestChineseSisterVoice() {
-      const voices = synth.getVoices();
-      if (!voices || voices.length === 0) return null;
-
-      const zhVoices = voices.filter(v => 
-        v.lang && (v.lang.toLowerCase().startsWith('zh') || v.lang.toLowerCase().startsWith('cmn'))
-      );
-      if (zhVoices.length === 0) return null;
-
-      // 1. Google 國語 (台灣) / Google Taiwan natural female voice
-      const p1 = zhVoices.find(v => /Google/i.test(v.name) && /(台灣|臺灣|zh-TW|cmn-TW)/i.test(v.name + v.lang));
-      if (p1) return p1;
-
-      // 2. High-quality gentle female voice names (Hsiao-Chen, Yating, Mei-Jia, Xiaoxiao, Ting-Ting, Siri)
-      const p2 = zhVoices.find(v => /(Hsiao|Yating|Mei-Jia|Meijia|Ting|Xiaoxiao|HanHan|Siri)/i.test(v.name));
-      if (p2) return p2;
-
-      // 3. Any Taiwan voice
-      const p3 = zhVoices.find(v => /(zh-TW|cmn-TW|zh_TW|台灣|臺灣)/i.test(v.lang + v.name));
-      if (p3) return p3;
-
-      // 4. Any Google Chinese voice
-      const p4 = zhVoices.find(v => /Google/i.test(v.name));
-      if (p4) return p4;
-
-      return zhVoices[0];
-    }
-
-    function speak(text, onComplete = null, forcedLang = null) {
+    function speak(text, onComplete = null) {
       if (!('speechSynthesis' in window)) {
         if (onComplete) onComplete();
         return;
       }
 
-      synth.cancel();
+      stopAllAudio();
 
       const utterance = new SpeechSynthesisUtterance(text);
-      const isZh = (forcedLang === 'zh') || (currentGameMode === 'multiplication_zh');
+      utterance.lang = 'en-US';
+      utterance.rate = 0.80; // Slower rate for 7-year-old ESL learners
+      utterance.pitch = 1.05;
 
-      if (isZh) {
-        utterance.lang = 'zh-TW';
-        // Gentle older sister parameters: slightly warm, calm, non-metallic
-        utterance.rate = 0.88;
-        utterance.pitch = 0.98;
-
-        const zhVoice = getBestChineseSisterVoice();
-        if (zhVoice) {
-          utterance.voice = zhVoice;
-        }
+      const voices = synth.getVoices();
+      const enVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Samantha')));
+      if (enVoice) {
+        utterance.voice = enVoice;
       } else {
-        utterance.lang = 'en-US';
-        utterance.rate = 0.80; // Slower rate for 7-year-old ESL learners
-        utterance.pitch = 1.05;
-
-        const voices = synth.getVoices();
-        const enVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Samantha')));
-        if (enVoice) {
-          utterance.voice = enVoice;
-        } else {
-          const anyEn = voices.find(v => v.lang.startsWith('en'));
-          if (anyEn) utterance.voice = anyEn;
-        }
+        const anyEn = voices.find(v => v.lang.startsWith('en'));
+        if (anyEn) utterance.voice = anyEn;
       }
 
       utterance.onend = () => {
         if (onComplete) onComplete();
       };
-
       utterance.onerror = () => {
         if (onComplete) onComplete();
       };
@@ -961,7 +836,7 @@ valThreshold.textContent = "±65°";
     // =========================================================
     function switchView(viewName) {
       currentView = viewName;
-      synth.cancel();
+      stopAllAudio();
 
       homeView.classList.remove('active');
       gameView.classList.remove('active');
@@ -1018,7 +893,7 @@ valThreshold.textContent = "±65°";
     async function launchTesting() {
       await ensureSensorsAndAudio();
       switchView('test');
-      speak("測試模式。請傾斜或搖動手機。", null, 'zh');
+      speak("Testing mode. Tilt or shake your phone.");
     }
 
     // =========================================================
@@ -1047,7 +922,7 @@ valThreshold.textContent = "±65°";
       if (currentQuestionIndex >= gameQuestions.length) {
         playRandomCelebrationSound();
         if (currentGameMode === 'multiplication_zh') {
-          speak(`哇！太厲害了！你完成了所有的乘法題目，總共拿到 ${gameScore} 顆星星！點一下螢幕，大姐姐再陪你玩一次喔！`);
+          playAudioFile("audio/finish.mp3");
         } else {
           speak(`Awesome job! You finished the game and earned ${gameScore} stars! Tap anywhere to play again.`);
         }
@@ -1061,14 +936,13 @@ valThreshold.textContent = "±65°";
 
       isGameLocked = false;
 
-      let fullSpeech = "";
       if (currentGameMode === 'multiplication_zh') {
-        // e.g. "3乘以5等於？ ... 左邊：15， ... 右邊：20。"
-        fullSpeech = `${qObj.q} 多少呢？ ... 左邊是 ${qObj.left}， ... 右邊是 ${qObj.right} 喔。`;
+        // Play human-recorded neural audio for this question
+        playAudioFile(`audio/q${qObj.id}.mp3`);
       } else {
-        fullSpeech = `${qObj.q} ... Left for ${qObj.left}, ... right for ${qObj.right}.`;
+        const fullSpeech = `${qObj.q} ... Left for ${qObj.left}, ... right for ${qObj.right}.`;
+        speak(fullSpeech);
       }
-      speak(fullSpeech);
     }
 
     function onGameScreenTap(event) {
@@ -1082,13 +956,11 @@ valThreshold.textContent = "±65°";
       if (isGameLocked) return;
 
       const qObj = gameQuestions[currentQuestionIndex];
-      let repeatSpeech = "";
       if (currentGameMode === 'multiplication_zh') {
-        repeatSpeech = `我們再聽一次喔：${qObj.q} 多少呢？ ... 左邊是 ${qObj.left}， ... 右邊是 ${qObj.right} 喔。`;
+        playAudioFile(`audio/q${qObj.id}.mp3`);
       } else {
-        repeatSpeech = `Listen again: ... ${qObj.q} ... Left for ${qObj.left}, ... right for ${qObj.right}.`;
+        speak(`Listen again: ... ${qObj.q} ... Left for ${qObj.left}, ... right for ${qObj.right}.`);
       }
-      speak(repeatSpeech);
     }
 
     function evaluateAnswer(userChoice) { // 'left' or 'right'
@@ -1110,39 +982,57 @@ valThreshold.textContent = "±65°";
         gameScore++;
         playRandomCelebrationSound();
 
-        let confirmation = "";
         if (currentGameMode === 'multiplication_zh') {
-          const randomPraise = PRAISES_ZH[Math.floor(Math.random() * PRAISES_ZH.length)];
-          confirmation = `${randomPraise} ${qObj.expl}`;
+          // Play human neural praise & confirmation audio!
+          setTimeout(() => {
+            playAudioFile(`audio/ans${qObj.id}.mp3`, () => {
+              setTimeout(() => {
+                currentQuestionIndex++;
+                presentCurrentQuestion();
+              }, 600);
+            });
+          }, 350);
         } else {
           const randomPraise = PRAISES_EN[Math.floor(Math.random() * PRAISES_EN.length)];
-          confirmation = `${randomPraise} ${qObj.expl}`;
+          const confirmation = `${randomPraise} ... ${qObj.expl}`;
+          setTimeout(() => {
+            speak(confirmation, () => {
+              setTimeout(() => {
+                currentQuestionIndex++;
+                presentCurrentQuestion();
+              }, 600);
+            });
+          }, 350);
         }
-
-        setTimeout(() => {
-          speak(confirmation, () => {
-            setTimeout(() => {
-              currentQuestionIndex++;
-              presentCurrentQuestion();
-            }, 600);
-          });
-        }, 350);
 
       } else {
         playTryAgainSound();
 
-        const retryMsg = (currentGameMode === 'multiplication_zh') ? RETRIES_ZH[Math.floor(Math.random() * RETRIES_ZH.length)] : "Oops! ... Let's try again.";
-
-        setTimeout(() => {
-          speak(retryMsg, () => {
-            setTimeout(() => {
-              arrowLeft.className = "arrow-icon-wrapper left";
-              arrowRight.className = "arrow-icon-wrapper right";
-              isGameLocked = false;
-              presentCurrentQuestion();
-            }, 500);
-          });
-        }, 350);
+        if (currentGameMode === 'multiplication_zh') {
+          // Play randomized warm gentle retry audio
+          const retryNum = Math.floor(Math.random() * 3) + 1;
+          setTimeout(() => {
+            playAudioFile(`audio/retry${retryNum}.mp3`, () => {
+              setTimeout(() => {
+                arrowLeft.className = "arrow-icon-wrapper left";
+                arrowRight.className = "arrow-icon-wrapper right";
+                isGameLocked = false;
+                presentCurrentQuestion();
+              }, 500);
+            });
+          }, 350);
+        } else {
+          setTimeout(() => {
+            speak("Oops! ... Let's try again.", () => {
+              setTimeout(() => {
+                arrowLeft.className = "arrow-icon-wrapper left";
+                arrowRight.className = "arrow-icon-wrapper right";
+                isGameLocked = false;
+                presentCurrentQuestion();
+              }, 500);
+            });
+          }, 350);
+        }
       }
     }
 
@@ -1160,7 +1050,7 @@ valThreshold.textContent = "±65°";
         valBeta.textContent = beta.toFixed(1) + '°';
       }
 
-      if (Math.abs(gamma) < 18) {
+      if (Math.abs(gamma) < 20) {
         hasReturnedToCenter = true;
         if (!isGameLocked) {
           arrowLeft.classList.remove('active-tilt');
@@ -1263,7 +1153,7 @@ valThreshold.textContent = "±65°";
       testMotionText.textContent = actionName;
       testDisplayCard.classList.add('active');
 
-      speak(speechVoice, null, 'zh');
+      speak(speechVoice);
 
       testCooldownBar.style.transition = 'none';
       testCooldownBar.style.width = '100%';
@@ -1280,11 +1170,11 @@ valThreshold.textContent = "±65°";
     }
 
     function testVoice() {
-      speak("Testing voice. How much is two plus three? Left for five, right for six.", null, 'en');
+      speak("Testing English voice. How much is two plus three? Left for five, right for six.");
     }
 
     function testVoiceZh() {
-      speak("你好呀！大姐姐陪你在車上玩九九乘法喔！3乘以5等於多少呢？左邊是15，右邊是20喔。", null, 'zh');
+      playAudioFile("audio/test_zh.mp3");
     }
 
     if ('speechSynthesis' in window) {
