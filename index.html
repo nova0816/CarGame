@@ -105,7 +105,7 @@
       display: flex;
       flex-direction: column;
       gap: 1.2rem;
-      margin: 2rem 0;
+      margin: 1.8rem 0;
     }
 
     .menu-card {
@@ -473,7 +473,7 @@
       <div class="app-icon">🚗 🎧</div>
       <h1 class="home-title">Car Rider English</h1>
       <p class="home-subtitle">
-        In-car listening practice for kids.<br>Listen carefully and steer your answer!
+        In-car listening practice for ESL kids.<br>Listen carefully and steer your answer!
       </p>
     </div>
 
@@ -482,8 +482,8 @@
       <div class="menu-card primary" onclick="launchGame()">
         <div class="menu-card-icon">🎮</div>
         <div class="menu-card-info">
-          <h2>Play Game <span class="badge-recommend">Kids</span></h2>
-          <p>Audio-only listening game. Tilt left for <strong>Yes</strong>, tilt right for <strong>No</strong>. Tap screen to repeat.</p>
+          <h2>Play Game <span class="badge-recommend">Audio Only</span></h2>
+          <p>Questions spoken slowly: Math (30%), Options (40%), and Yes/No (30%). Tilt to answer!</p>
         </div>
       </div>
 
@@ -519,7 +519,7 @@
     </div>
 
     <div class="home-footer-info">
-      <span>🛡️ Zero-screen-distraction design for car rides</span>
+      <span>🛡️ Zero visual distraction • Pure listening focus</span>
     </div>
   </div>
 
@@ -608,34 +608,72 @@
 
   <script>
     // =========================================================
-    // 1. DATA: 25 Age-Appropriate ESL Questions for 7-Year-Olds
+    // 1. QUESTION BANKS (Math: 30%, Options: 40%, Yes/No: 30%)
     // =========================================================
-    const QUESTIONS_BANK = [
-      { q: "Is a pig bigger than a mouse?", ans: true, expl: "A pig is much bigger than a mouse!" },
-      { q: "Can a bird fly in the sky?", ans: true, expl: "Birds have wings to fly high!" },
-      { q: "Does a cow drink coffee?", ans: false, expl: "Cows drink water, not coffee!" },
-      { q: "Is ice cream cold?", ans: true, expl: "Ice cream is very cold and sweet!" },
-      { q: "Can a fish walk on legs?", ans: false, expl: "Fish swim with fins, no legs!" },
-      { q: "Does a car have wheels?", ans: true, expl: "A car has four wheels!" },
-      { q: "Is an elephant very tiny?", ans: false, expl: "An elephant is huge, not tiny!" },
-      { q: "Do we sleep at night?", ans: true, expl: "We go to bed and sleep at night!" },
-      { q: "Can an apple swim in the pool?", ans: false, expl: "Apples cannot swim!" },
-      { q: "Does a dog bark woof woof?", ans: true, expl: "Dogs bark woof woof!" },
-      { q: "Is fire hot?", ans: true, expl: "Fire is very hot!" },
-      { q: "Can a cat climb a tree?", ans: true, expl: "Cats love climbing tall trees!" },
-      { q: "Is the sun cold like snow?", ans: false, expl: "The sun is hot and bright!" },
-      { q: "Do rabbits have long ears?", ans: true, expl: "Rabbits have two long ears!" },
-      { q: "Does candy grow on trees?", ans: false, expl: "Candy does not grow on trees!" },
-      { q: "Do we wear shoes on our feet?", ans: true, expl: "We wear shoes on our feet!" },
-      { q: "Can a turtle run faster than a car?", ans: false, expl: "Turtles walk very slowly!" },
-      { q: "Do ducks like swimming in water?", ans: true, expl: "Ducks love swimming in water!" },
-      { q: "Is a rock soft like a pillow?", ans: false, expl: "Rocks are hard, pillows are soft!" },
-      { q: "Is a giraffe very tall?", ans: true, expl: "Giraffes have very long necks!" },
-      { q: "Do fish breathe underwater?", ans: true, expl: "Fish breathe underwater!" },
-      { q: "Can a bicycle fly over the moon?", ans: false, expl: "Bicycles ride on the ground!" },
-      { q: "Is a lemon sour?", ans: true, expl: "Lemons are sour and yellow!" },
-      { q: "Do snakes have arms and legs?", ans: false, expl: "Snakes slither with no legs!" },
-      { q: "When you are thirsty, do you drink water?", ans: true, expl: "Water is great when you are thirsty!" }
+
+    // A. MATHEMATICS CALCULATION QUESTIONS (Account for 30%)
+    const MATH_QUESTIONS = [
+      { q: "How much is 3 plus 5?", left: "8", right: "6", ans: "left", expl: "3 plus 5 is 8!" },
+      { q: "How much is 4 plus 4?", left: "7", right: "8", ans: "right", expl: "4 plus 4 is 8!" },
+      { q: "How much is 2 plus 6?", left: "8", right: "9", ans: "left", expl: "2 plus 6 is 8!" },
+      { q: "How much is 5 plus 5?", left: "10", right: "8", ans: "left", expl: "5 plus 5 is 10!" },
+      { q: "How much is 7 plus 2?", left: "10", right: "9", ans: "right", expl: "7 plus 2 is 9!" },
+      { q: "How much is 6 plus 1?", left: "7", right: "5", ans: "left", expl: "6 plus 1 is 7!" },
+      { q: "How much is 1 plus 4?", left: "6", right: "5", ans: "right", expl: "1 plus 4 is 5!" },
+      { q: "How much is 3 plus 3?", left: "6", right: "7", ans: "left", expl: "3 plus 3 is 6!" },
+      { q: "How much is 10 minus 2?", left: "8", right: "5", ans: "left", expl: "10 minus 2 is 8!" },
+      { q: "How much is 9 minus 3?", left: "5", right: "6", ans: "right", expl: "9 minus 3 is 6!" },
+      { q: "How much is 8 minus 4?", left: "4", right: "3", ans: "left", expl: "8 minus 4 is 4!" },
+      { q: "How much is 7 minus 5?", left: "3", right: "2", ans: "right", expl: "7 minus 5 is 2!" },
+      { q: "How much is 5 minus 1?", left: "4", right: "6", ans: "left", expl: "5 minus 1 is 4!" },
+      { q: "How much is 10 minus 5?", left: "4", right: "5", ans: "right", expl: "10 minus 5 is 5!" },
+      { q: "How much is 6 minus 2?", left: "4", right: "3", ans: "left", expl: "6 minus 2 is 4!" },
+      { q: "How much is 4 plus 5?", left: "9", right: "8", ans: "left", expl: "4 plus 5 is 9!" },
+      { q: "How much is 8 minus 1?", left: "6", right: "7", ans: "right", expl: "8 minus 1 is 7!" },
+      { q: "How much is 2 plus 3?", left: "5", right: "6", ans: "left", expl: "2 plus 3 is 5!" }
+    ];
+
+    // B. VOCABULARY & CONCEPT "OPTIONS" QUESTIONS (Account for 40%)
+    // (Total options = Math 30% + Options 40% = 70%!)
+    const OPTION_QUESTIONS = [
+      { q: "Who has a long trunk?", left: "a cat", right: "an elephant", ans: "right", expl: "An elephant has a long trunk!" },
+      { q: "Which one can fly in the sky?", left: "an airplane", right: "a fish", ans: "left", expl: "An airplane flies in the sky!" },
+      { q: "Which one is sweet?", left: "ice cream", right: "a lemon", ans: "left", expl: "Ice cream is sweet!" },
+      { q: "Where do sharks live?", left: "in the forest", right: "in the ocean", ans: "right", expl: "Sharks live in the ocean!" },
+      { q: "Which one do you wear on your feet?", left: "socks", right: "a hat", ans: "left", expl: "You wear socks on your feet!" },
+      { q: "Who has a very long neck?", left: "a giraffe", right: "a dog", ans: "left", expl: "A giraffe has a very long neck!" },
+      { q: "What do you drink when you are thirsty?", left: "water", right: "a book", ans: "left", expl: "Water is great to drink!" },
+      { q: "Which animal can hop high?", left: "a hippo", right: "a kangaroo", ans: "right", expl: "A kangaroo hops very high!" },
+      { q: "Which one has four wheels?", left: "a car", right: "a bicycle", ans: "left", expl: "A car has four wheels!" },
+      { q: "Which one is cold?", left: "an ice cube", right: "hot soup", ans: "left", expl: "An ice cube is cold!" },
+      { q: "What do you use to brush your teeth?", left: "a spoon", right: "a toothbrush", ans: "right", expl: "You use a toothbrush!" },
+      { q: "Which animal gives us milk?", left: "a cow", right: "a monkey", ans: "left", expl: "A cow gives us milk!" },
+      { q: "Which season has snow and cold weather?", left: "summer", right: "winter", ans: "right", expl: "Winter has snow and cold weather!" },
+      { q: "Who works at a fire station?", left: "a firefighter", right: "a dentist", ans: "left", expl: "A firefighter works at the fire station!" },
+      { q: "Which animal says meow?", left: "a duck", right: "a cat", ans: "right", expl: "A cat says meow!" },
+      { q: "Where do we go to learn and read?", left: "the school", right: "the bedroom", ans: "left", expl: "We go to school to learn and read!" },
+      { q: "Which animal is bigger?", left: "an ant", right: "a horse", ans: "right", expl: "A horse is much bigger than an ant!" },
+      { q: "What color is healthy grass?", left: "green", right: "purple", ans: "left", expl: "Grass is green!" },
+      { q: "Which one shines bright in the day sky?", left: "the sun", right: "the moon", ans: "left", expl: "The sun shines during the day!" },
+      { q: "What do bees make?", left: "honey", right: "bread", ans: "left", expl: "Bees make delicious honey!" }
+    ];
+
+    // C. YES / NO QUESTIONS (Account for 30%)
+    const YESNO_QUESTIONS = [
+      { q: "Does a dog bark woof woof?", left: "yes", right: "no", ans: "left", expl: "Dogs bark woof woof!" },
+      { q: "Can a fish walk on legs?", left: "yes", right: "no", ans: "right", expl: "Fish swim with fins, no legs!" },
+      { q: "Is fire very hot?", left: "yes", right: "no", ans: "left", expl: "Fire is very hot!" },
+      { q: "Can an apple fly through the air like a bird?", left: "yes", right: "no", ans: "right", expl: "Apples cannot fly!" },
+      { q: "Do we sleep during the night?", left: "yes", right: "no", ans: "left", expl: "We sleep at night!" },
+      { q: "Do rabbits have long ears?", left: "yes", right: "no", ans: "left", expl: "Rabbits have two long ears!" },
+      { q: "Does candy grow on trees?", left: "yes", right: "no", ans: "right", expl: "Candy does not grow on trees!" },
+      { q: "Does ice cream melt under the hot sun?", left: "yes", right: "no", ans: "left", expl: "Ice cream melts when it gets hot!" },
+      { q: "Can a turtle run faster than a race car?", left: "yes", right: "no", ans: "right", expl: "Turtles move very slowly!" },
+      { q: "Do birds have wings to fly?", left: "yes", right: "no", ans: "left", expl: "Birds use wings to fly!" },
+      { q: "Can a bicycle drive underwater?", left: "yes", right: "no", ans: "right", expl: "Bicycles cannot drive underwater!" },
+      { q: "Is an elephant very tiny?", left: "yes", right: "no", ans: "right", expl: "An elephant is huge!" },
+      { q: "Do ducks love swimming in the water?", left: "yes", right: "no", ans: "left", expl: "Ducks love water!" },
+      { q: "Do we wear shoes on our feet?", left: "yes", right: "no", ans: "left", expl: "We wear shoes on our feet!" }
     ];
 
     // Celebratory spoken phrases
@@ -698,6 +736,11 @@
 
     // Initialize Sensitivity
     syncSensitivityUI(tiltAngleThreshold);
+
+    // Utility: Shuffle array
+    function shuffle(arr) {
+      return [...arr].sort(() => 0.5 - Math.random());
+    }
 
     // =========================================================
     // 3. WEB AUDIO API - 5 PROCEDURAL SOUND EFFECTS
@@ -782,7 +825,7 @@
     }
 
     // =========================================================
-    // 4. SPEECH SYNTHESIS ENGINE
+    // 4. SPEECH SYNTHESIS ENGINE (SLOWER SPEED FOR ESL KIDS)
     // =========================================================
     function speak(text, onComplete = null) {
       if (!('speechSynthesis' in window)) {
@@ -793,8 +836,9 @@
       synth.cancel();
 
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = 0.95; // Gently paced for ESL listening
-      utterance.pitch = 1.1;
+      // Slower rate (0.80) specifically for 7-year-old ESL learners
+      utterance.rate = 0.80;
+      utterance.pitch = 1.05;
 
       const voices = synth.getVoices();
       const enVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Samantha')));
@@ -874,10 +918,21 @@
     }
 
     // =========================================================
-    // 6. GAME LOGIC (PURE AUDIO + TILT CONTROL)
+    // 6. GAME LOGIC (EXACT RATIO: Math 30%, Options 40%, Yes/No 30%)
     // =========================================================
     function initGameSession() {
-      gameQuestions = [...QUESTIONS_BANK].sort(() => 0.5 - Math.random()).slice(0, 15);
+      // Create a 15-question round with the exact requested percentages:
+      // Math: 30% -> 5 questions
+      // Options (vocabulary/concept): 40% -> 6 questions
+      // Yes/No: 30% -> 4 questions
+      // (Total Option Questions = 5 Math + 6 Options = 11/15 = ~73.3% / 70%!)
+      const selectedMath = shuffle(MATH_QUESTIONS).slice(0, 5);
+      const selectedOptions = shuffle(OPTION_QUESTIONS).slice(0, 6);
+      const selectedYesNo = shuffle(YESNO_QUESTIONS).slice(0, 4);
+
+      // Mix and shuffle all selected questions so every game feels fresh!
+      gameQuestions = shuffle([...selectedMath, ...selectedOptions, ...selectedYesNo]);
+
       currentQuestionIndex = 0;
       gameScore = 0;
       isGameLocked = false;
@@ -901,8 +956,8 @@
 
       isGameLocked = false;
 
-      // Speak question and binary choices out loud
-      const fullSpeech = `${qObj.q} ... Left for yes. Right for no.`;
+      // Speak question and the two options slowly with natural pauses
+      const fullSpeech = `${qObj.q} ... Left for ${qObj.left}, ... right for ${qObj.right}.`;
       speak(fullSpeech);
     }
 
@@ -918,21 +973,21 @@
       if (isGameLocked) return;
 
       const qObj = gameQuestions[currentQuestionIndex];
-      speak(`Listen again: ${qObj.q} ... Left for yes, right for no.`);
+      speak(`Listen again: ... ${qObj.q} ... Left for ${qObj.left}, ... right for ${qObj.right}.`);
     }
 
     // Evaluate answer triggered by Left or Right Tilt
-    function evaluateAnswer(userPickedYes) {
+    function evaluateAnswer(userChoice) { // userChoice is 'left' or 'right'
       if (isGameLocked || currentView !== 'game') return;
       if (currentQuestionIndex >= gameQuestions.length) return;
 
       const qObj = gameQuestions[currentQuestionIndex];
-      const isCorrect = (userPickedYes === qObj.ans);
+      const isCorrect = (userChoice === qObj.ans);
 
       isGameLocked = true; // Lock until next question
 
       // Visual flash on corresponding arrow
-      if (userPickedYes) {
+      if (userChoice === 'left') {
         arrowLeft.classList.add(isCorrect ? 'correct-flash' : 'wrong-flash');
       } else {
         arrowRight.classList.add(isCorrect ? 'correct-flash' : 'wrong-flash');
@@ -943,7 +998,7 @@
         playRandomCelebrationSound();
 
         const randomPraise = PRAISES[Math.floor(Math.random() * PRAISES.length)];
-        const confirmation = `${randomPraise} ${qObj.expl}`;
+        const confirmation = `${randomPraise} ... ${qObj.expl}`;
 
         setTimeout(() => {
           speak(confirmation, () => {
@@ -958,7 +1013,7 @@
         playTryAgainSound();
 
         setTimeout(() => {
-          speak("Oops! Let's try again.", () => {
+          speak("Oops! ... Let's try again.", () => {
             setTimeout(() => {
               arrowLeft.className = "arrow-icon-wrapper left";
               arrowRight.className = "arrow-icon-wrapper right";
@@ -999,11 +1054,11 @@
           if (gamma < -tiltAngleThreshold) {
             hasReturnedToCenter = false;
             arrowLeft.classList.add('active-tilt');
-            evaluateAnswer(true); // Tilt Left = YES
+            evaluateAnswer('left'); // Tilt Left
           } else if (gamma > tiltAngleThreshold) {
             hasReturnedToCenter = false;
             arrowRight.classList.add('active-tilt');
-            evaluateAnswer(false); // Tilt Right = NO
+            evaluateAnswer('right'); // Tilt Right
           }
         }
         return;
@@ -1140,7 +1195,7 @@
     }
 
     function testVoice() {
-      speak("Testing voice. The sound and audio are ready!");
+      speak("Testing voice. How much is two plus three? Left for five, right for six.");
     }
 
     if ('speechSynthesis' in window) {
