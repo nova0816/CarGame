@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Car Rider ESL - In-Car Listening Game</title>
+  <title>Car Rider - In-Car Listening Game</title>
   <style>
     * {
       box-sizing: border-box;
@@ -15,13 +15,14 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft JhengHei", "PingFang TC", Helvetica, Arial, sans-serif;
       background-color: #0b1120;
       color: #e2e8f0;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      overflow: hidden;
+      overflow-x: hidden;
+      overflow-y: auto;
     }
 
     /* Common View Styles */
@@ -75,25 +76,25 @@
        1. HOME VIEW (Option Selector)
        ========================================= */
     .home-header {
-      margin-top: 1.5rem;
+      margin-top: 1rem;
     }
 
     .app-icon {
-      font-size: 4rem;
+      font-size: 3.5rem;
       line-height: 1;
-      margin-bottom: 0.8rem;
+      margin-bottom: 0.5rem;
     }
 
     .home-title {
-      font-size: 1.8rem;
+      font-size: 1.75rem;
       font-weight: 800;
       color: #38bdf8;
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.3rem;
       letter-spacing: -0.5px;
     }
 
     .home-subtitle {
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       color: #94a3b8;
       line-height: 1.4;
       max-width: 340px;
@@ -104,21 +105,21 @@
       width: 100%;
       display: flex;
       flex-direction: column;
-      gap: 1.2rem;
-      margin: 1.8rem 0;
+      gap: 0.9rem;
+      margin: 1.4rem 0;
     }
 
     .menu-card {
       background: #1e293b;
       border: 2px solid #334155;
-      border-radius: 22px;
-      padding: 1.4rem;
+      border-radius: 20px;
+      padding: 1.1rem 1.2rem;
       text-align: left;
       cursor: pointer;
       transition: all 0.2s ease;
       display: flex;
       align-items: center;
-      gap: 1.2rem;
+      gap: 1.1rem;
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
     }
 
@@ -126,29 +127,41 @@
       transform: scale(0.98);
     }
 
+    /* English Game Card */
     .menu-card.primary {
       border-color: #0284c7;
       background: linear-gradient(145deg, #1e293b, #0f2847);
       box-shadow: 0 10px 25px rgba(2, 132, 199, 0.25);
     }
 
+    /* Multiplication Card (Amber/Gold Theme) */
+    .menu-card.math-zh {
+      border-color: #f59e0b;
+      background: linear-gradient(145deg, #1e293b, #2e1c0c);
+      box-shadow: 0 10px 25px rgba(245, 158, 11, 0.25);
+    }
+
     .menu-card-icon {
-      font-size: 2.8rem;
+      font-size: 2.6rem;
       line-height: 1;
       flex-shrink: 0;
     }
 
     .menu-card-info h2 {
-      font-size: 1.35rem;
+      font-size: 1.25rem;
       font-weight: 800;
       color: #f8fafc;
-      margin-bottom: 0.25rem;
+      margin-bottom: 0.2rem;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.4rem;
     }
 
     .menu-card-info p {
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       color: #94a3b8;
-      line-height: 1.3;
+      line-height: 1.35;
     }
 
     .badge-recommend {
@@ -158,10 +171,13 @@
       font-weight: 700;
       padding: 0.15rem 0.5rem;
       border-radius: 6px;
-      margin-left: 0.4rem;
-      vertical-align: middle;
       text-transform: uppercase;
       letter-spacing: 0.5px;
+    }
+
+    .badge-math {
+      background: #f59e0b !important;
+      color: #0f172a !important;
     }
 
     /* Sensitivity Settings Card */
@@ -170,8 +186,8 @@
       border: 2px solid #334155;
       border-radius: 18px;
       width: 100%;
-      padding: 1rem 1.2rem;
-      margin: 0.8rem 0;
+      padding: 0.9rem 1.1rem;
+      margin: 0.5rem 0;
       text-align: left;
     }
 
@@ -179,11 +195,11 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.4rem;
     }
 
     .sensitivity-title {
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       font-weight: 700;
       color: #f8fafc;
       display: flex;
@@ -194,15 +210,15 @@
     .sensitivity-badge {
       background: #0284c7;
       color: white;
-      font-size: 1rem;
+      font-size: 0.95rem;
       font-weight: 800;
-      padding: 0.15rem 0.6rem;
+      padding: 0.12rem 0.55rem;
       border-radius: 9999px;
       font-family: monospace;
     }
 
     .slider-container {
-      margin: 0.6rem 0 0.3rem 0;
+      margin: 0.5rem 0 0.25rem 0;
     }
 
     input[type=range] {
@@ -229,7 +245,7 @@
     .slider-labels {
       display: flex;
       justify-content: space-between;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       color: #64748b;
       margin-top: 0.25rem;
     }
@@ -237,7 +253,7 @@
     .preset-row {
       display: flex;
       gap: 0.4rem;
-      margin-top: 0.7rem;
+      margin-top: 0.6rem;
     }
 
     .btn-preset {
@@ -246,8 +262,8 @@
       color: #cbd5e1;
       border: 1px solid #475569;
       border-radius: 8px;
-      padding: 0.4rem 0.2rem;
-      font-size: 0.75rem;
+      padding: 0.38rem 0.2rem;
+      font-size: 0.72rem;
       font-weight: 600;
       cursor: pointer;
       text-align: center;
@@ -260,9 +276,9 @@
     }
 
     .home-footer-info {
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       color: #64748b;
-      margin-top: 0.5rem;
+      margin-top: 0.4rem;
     }
 
     /* =========================================
@@ -280,6 +296,7 @@
       justify-content: center;
       background-color: #060913;
       cursor: pointer; /* Tapping anywhere repeats audio */
+      overflow: hidden;
     }
 
     #game-view.active {
@@ -471,28 +488,37 @@
   <div id="home-view" class="view active">
     <div class="home-header">
       <div class="app-icon">🚗 🎧</div>
-      <h1 class="home-title">Car Rider English</h1>
+      <h1 class="home-title">Car Rider</h1>
       <p class="home-subtitle">
-        In-car listening practice for ESL kids.<br>Listen carefully and steer your answer!
+        專為車上設計的純聽力遊戲<br>仔細聽語音，用方向盤角度來答題！
       </p>
     </div>
 
     <div class="menu-options-container">
-      <!-- Option 1: Play Game -->
+      <!-- Option 1: Play Game (English Listening) -->
       <div class="menu-card primary" onclick="launchGame()">
         <div class="menu-card-icon">🎮</div>
         <div class="menu-card-info">
-          <h2>Play Game <span class="badge-recommend">Audio Only</span></h2>
-          <p>Questions spoken slowly: Math (30%) and Fun Options (70%). Tilt to answer!</p>
+          <h2>Play Game <span class="badge-recommend">ESL English</span></h2>
+          <p>Slow English: Math (30%) & Concept Options (70%). Tilt left or right!</p>
         </div>
       </div>
 
-      <!-- Option 2: Motion Testing Environment -->
+      <!-- Option 2: 九九乘法 (Traditional Chinese) -->
+      <div class="menu-card math-zh" onclick="launchMultiplicationGame()">
+        <div class="menu-card-icon">🧮</div>
+        <div class="menu-card-info">
+          <h2>九九乘法 <span class="badge-recommend badge-math">中文語音</span></h2>
+          <p>「3乘以5等於？」左邊：15，右邊：20。40題乘法表聽力訓練！</p>
+        </div>
+      </div>
+
+      <!-- Option 3: Motion Testing Environment -->
       <div class="menu-card" onclick="launchTesting()">
         <div class="menu-card-icon">🔧</div>
         <div class="menu-card-info">
           <h2>Testing Environment</h2>
-          <p>Test all motions (tilt, shake, flip), check real-time sensor degrees, and calibrate car sensitivity.</p>
+          <p>測試傾斜角度、感應器即時數值與車用靈敏度校正。</p>
         </div>
       </div>
     </div>
@@ -500,26 +526,26 @@
     <!-- Quick Car Tilt Calibration Bar directly on Home -->
     <div class="sensitivity-card">
       <div class="sensitivity-header">
-        <span class="sensitivity-title">🚗 Car Tilt Sensitivity</span>
+        <span class="sensitivity-title">🚗 車用傾斜靈敏度</span>
         <span class="sensitivity-badge" id="home-tilt-badge">48°</span>
       </div>
       <div class="slider-container">
         <input type="range" id="home-tilt-slider" min="25" max="65" value="48" step="1" oninput="updateTiltThreshold(this.value)">
         <div class="slider-labels">
-          <span>Gentle (25°)</span>
-          <span>Car Mode (48°)</span>
-          <span>Deep Turn (65°)</span>
+          <span>靈敏 (25°)</span>
+          <span>車用推薦 (48°)</span>
+          <span>大角度 (65°)</span>
         </div>
       </div>
       <div class="preset-row">
-        <button type="button" class="btn-preset" id="home-preset-desk" onclick="setPreset(30)">Desk (30°)</button>
-        <button type="button" class="btn-preset active" id="home-preset-car" onclick="setPreset(48)">🚗 Car (48°)</button>
-        <button type="button" class="btn-preset" id="home-preset-bumpy" onclick="setPreset(58)">Bumpy (58°)</button>
+        <button type="button" class="btn-preset" id="home-preset-desk" onclick="setPreset(30)">書桌 (30°)</button>
+        <button type="button" class="btn-preset active" id="home-preset-car" onclick="setPreset(48)">🚗 車用 (48°)</button>
+        <button type="button" class="btn-preset" id="home-preset-bumpy" onclick="setPreset(58)">顛簸路面 (58°)</button>
       </div>
     </div>
 
     <div class="home-footer-info">
-      <span>🛡️ Zero visual distraction • Pure listening focus</span>
+      <span>🛡️ 零螢幕眩光干擾 • 專注於聽力練習</span>
     </div>
   </div>
 
@@ -556,11 +582,11 @@
   <div id="test-view" class="view">
     <div class="nav-bar">
       <button class="btn-nav-back" onclick="goToHome()">
-        ← Menu
+        ← 回主選單
       </button>
       <span class="nav-title">Testing Environment</span>
       <button class="btn-nav-back" onclick="testVoice()">
-        🔊 Voice
+        🔊 測試聲音
       </button>
     </div>
 
@@ -601,17 +627,18 @@
     </div>
 
     <div class="controls-row">
-      <button class="btn-action" onclick="testVoice()">🔊 Test Voice</button>
-      <button class="btn-action" onclick="playRandomCelebrationSound()">🎵 Test Chime</button>
+      <button class="btn-action" onclick="testVoice()">🔊 測試英文</button>
+      <button class="btn-action" onclick="testVoiceZh()">🔊 測試中文</button>
+      <button class="btn-action" onclick="playRandomCelebrationSound()">🎵 測試音效</button>
     </div>
   </div>
 
   <script>
     // =========================================================
-    // 1. QUESTION BANKS (Math: 30%, Options: 40%, Yes/No: 30%)
+    // 1. QUESTION BANKS
     // =========================================================
 
-    // A. MATHEMATICS CALCULATION QUESTIONS (Account for 30%)
+    // A. ESL MATHEMATICS QUESTIONS (30% of English mode)
     const MATH_QUESTIONS = [
       { q: "How much is 3 plus 5?", left: "8", right: "6", ans: "left", expl: "3 plus 5 is 8!" },
       { q: "How much is 4 plus 4?", left: "7", right: "8", ans: "right", expl: "4 plus 4 is 8!" },
@@ -633,7 +660,7 @@
       { q: "How much is 2 plus 3?", left: "5", right: "6", ans: "left", expl: "2 plus 3 is 5!" }
     ];
 
-    // B. VOCABULARY & CONCEPT "OPTIONS" QUESTIONS (Account for 70%)
+    // B. ESL VOCABULARY & CONCEPT "OPTIONS" QUESTIONS (70% of English mode)
     const OPTION_QUESTIONS = [
       { q: "Who has a long trunk?", left: "a cat", right: "an elephant", ans: "right", expl: "An elephant has a long trunk!" },
       { q: "Which one can fly in the sky?", left: "an airplane", right: "a fish", ans: "left", expl: "An airplane flies in the sky!" },
@@ -655,7 +682,6 @@
       { q: "What color is healthy grass?", left: "green", right: "purple", ans: "left", expl: "Grass is green!" },
       { q: "Which one shines bright in the day sky?", left: "the sun", right: "the moon", ans: "left", expl: "The sun shines during the day!" },
       { q: "What do bees make?", left: "honey", right: "bread", ans: "left", expl: "Bees make delicious honey!" },
-      // Converted from previous Yes/No questions into concrete options:
       { q: "Which animal barks woof woof?", left: "a dog", right: "a sheep", ans: "left", expl: "A dog barks woof woof!" },
       { q: "Which animal lives in water and has no legs?", left: "a dog", right: "a fish", ans: "right", expl: "Fish swim in water without legs!" },
       { q: "Which one is very hot?", left: "a campfire", right: "a snowman", ans: "left", expl: "A campfire is very hot!" },
@@ -672,8 +698,52 @@
       { q: "Where do we wear our shoes?", left: "on our heads", right: "on our feet", ans: "right", expl: "We wear shoes on our feet!" }
     ];
 
-    // Celebratory spoken phrases
-    const PRAISES = [
+    // C. 九九乘法 40 題題庫 (Traditional Chinese)
+    const MULTIPLICATION_QUESTIONS = [
+      { q: "2乘以3等於？", left: "6", right: "8", ans: "left", expl: "2乘以3等於6！" },
+      { q: "2乘以4等於？", left: "6", right: "8", ans: "right", expl: "2乘以4等於8！" },
+      { q: "2乘以6等於？", left: "12", right: "14", ans: "left", expl: "2乘以6等於12！" },
+      { q: "2乘以7等於？", left: "16", right: "14", ans: "right", expl: "2乘以7等於14！" },
+      { q: "2乘以8等於？", left: "16", right: "18", ans: "left", expl: "2乘以8等於16！" },
+      { q: "3乘以2等於？", left: "5", right: "6", ans: "right", expl: "3乘以2等於6！" },
+      { q: "3乘以3等於？", left: "9", right: "6", ans: "left", expl: "3乘以3等於9！" },
+      { q: "3乘以4等於？", left: "15", right: "12", ans: "right", expl: "3乘以4等於12！" },
+      { q: "3乘以5等於？", left: "15", right: "20", ans: "left", expl: "3乘以5等於15！" },
+      { q: "3乘以6等於？", left: "16", right: "18", ans: "right", expl: "3乘以6等於18！" },
+      { q: "3乘以7等於？", left: "21", right: "24", ans: "left", expl: "3乘以7等於21！" },
+      { q: "3乘以8等於？", left: "27", right: "24", ans: "right", expl: "3乘以8等於24！" },
+      { q: "4乘以3等於？", left: "12", right: "16", ans: "left", expl: "4乘以3等於12！" },
+      { q: "4乘以4等於？", left: "14", right: "16", ans: "right", expl: "4乘以4等於16！" },
+      { q: "4乘以5等於？", left: "20", right: "25", ans: "left", expl: "4乘以5等於20！" },
+      { q: "4乘以6等於？", left: "28", right: "24", ans: "right", expl: "4乘以6等於24！" },
+      { q: "4乘以7等於？", left: "28", right: "24", ans: "left", expl: "4乘以7等於28！" },
+      { q: "4乘以8等於？", left: "36", right: "32", ans: "right", expl: "4乘以8等於32！" },
+      { q: "5乘以2等於？", left: "10", right: "15", ans: "left", expl: "5乘以2等於10！" },
+      { q: "5乘以3等於？", left: "12", right: "15", ans: "right", expl: "5乘以3等於15！" },
+      { q: "5乘以4等於？", left: "20", right: "24", ans: "left", expl: "5乘以4等於20！" },
+      { q: "5乘以5等於？", left: "30", right: "25", ans: "right", expl: "5乘以5等於25！" },
+      { q: "5乘以6等於？", left: "30", right: "35", ans: "left", expl: "5乘以6等於30！" },
+      { q: "5乘以7等於？", left: "40", right: "35", ans: "right", expl: "5乘以7等於35！" },
+      { q: "5乘以8等於？", left: "40", right: "45", ans: "left", expl: "5乘以8等於40！" },
+      { q: "6乘以3等於？", left: "18", right: "21", ans: "left", expl: "6乘以3等於18！" },
+      { q: "6乘以4等於？", left: "20", right: "24", ans: "right", expl: "6乘以4等於24！" },
+      { q: "6乘以5等於？", left: "30", right: "36", ans: "left", expl: "6乘以5等於30！" },
+      { q: "6乘以6等於？", left: "32", right: "36", ans: "right", expl: "6乘以6等於36！" },
+      { q: "6乘以7等於？", left: "42", right: "48", ans: "left", expl: "6乘以7等於42！" },
+      { q: "7乘以2等於？", left: "16", right: "14", ans: "right", expl: "7乘以2等於14！" },
+      { q: "7乘以3等於？", left: "21", right: "24", ans: "left", expl: "7乘以3等於21！" },
+      { q: "7乘以4等於？", left: "24", right: "28", ans: "right", expl: "7乘以4等於28！" },
+      { q: "7乘以5等於？", left: "35", right: "30", ans: "left", expl: "7乘以5等於35！" },
+      { q: "7乘以7等於？", left: "42", right: "49", ans: "right", expl: "7乘以7等於49！" },
+      { q: "8乘以2等於？", left: "16", right: "18", ans: "left", expl: "8乘以2等於16！" },
+      { q: "8乘以3等於？", left: "21", right: "24", ans: "right", expl: "8乘以3等於24！" },
+      { q: "8乘以4等於？", left: "32", right: "36", ans: "left", expl: "8乘以4等於32！" },
+      { q: "8乘以5等於？", left: "45", right: "40", ans: "right", expl: "8乘以5等於40！" },
+      { q: "9乘以3等於？", left: "27", right: "24", ans: "left", expl: "9乘以3等於27！" }
+    ];
+
+    // Celebratory spoken phrases (English & Chinese)
+    const PRAISES_EN = [
       "Bingo!",
       "Super!",
       "Awesome!",
@@ -683,10 +753,20 @@
       "Spot on!"
     ];
 
+    const PRAISES_ZH = [
+      "答對了！",
+      "太棒了！",
+      "好厲害！",
+      "完全正確！",
+      "一級棒！",
+      "太神了！"
+    ];
+
     // =========================================================
     // 2. STATE & CONFIGURATION
     // =========================================================
     let currentView = "home"; // "home" | "game" | "test"
+    let currentGameMode = "english"; // "english" | "multiplication_zh"
     let tiltAngleThreshold = parseInt(localStorage.getItem('carGame_tiltThreshold')) || 48;
     const SHAKE_THRESHOLD = 17;
     const COOLDOWN_MS = 1400;
@@ -733,7 +813,6 @@
     // Initialize Sensitivity
     syncSensitivityUI(tiltAngleThreshold);
 
-    // Utility: Shuffle array
     function shuffle(arr) {
       return [...arr].sort(() => 0.5 - Math.random());
     }
@@ -778,27 +857,23 @@
       const choice = Math.floor(Math.random() * 5);
       switch(choice) {
         case 0:
-          // Sound 1: Bright Major Arpeggio (C5 -> E5 -> G5 -> C6)
           playTone(523.25, 'triangle', 0.0, 0.25, 0.35);
           playTone(659.25, 'triangle', 0.1, 0.25, 0.35);
           playTone(783.99, 'triangle', 0.2, 0.25, 0.35);
           playTone(1046.50, 'sine', 0.32, 0.5, 0.4);
           break;
         case 1:
-          // Sound 2: Magical Star Twinkle
           playTone(783.99, 'sine', 0.0, 0.2, 0.3);
           playTone(987.77, 'sine', 0.08, 0.2, 0.3);
           playTone(1174.66, 'sine', 0.16, 0.25, 0.35);
           playTone(1567.98, 'triangle', 0.25, 0.6, 0.4);
           break;
         case 2:
-          // Sound 3: Playful Xylophone Fanfare
           playTone(587.33, 'triangle', 0.0, 0.15, 0.4);
           playTone(880.00, 'triangle', 0.12, 0.15, 0.4);
           playTone(1174.66, 'triangle', 0.24, 0.45, 0.4);
           break;
         case 3:
-          // Sound 4: Cheerful Level-Up Chime
           playTone(440.0, 'sine', 0.0, 0.15, 0.3);
           playTone(554.37, 'sine', 0.09, 0.15, 0.3);
           playTone(659.25, 'sine', 0.18, 0.15, 0.3);
@@ -806,7 +881,6 @@
           break;
         case 4:
         default:
-          // Sound 5: Joyful Grand Chord
           playTone(523.25, 'sine', 0.0, 0.6, 0.25);
           playTone(659.25, 'sine', 0.05, 0.6, 0.25);
           playTone(783.99, 'triangle', 0.1, 0.6, 0.3);
@@ -821,9 +895,9 @@
     }
 
     // =========================================================
-    // 4. SPEECH SYNTHESIS ENGINE (SLOWER SPEED FOR ESL KIDS)
+    // 4. SPEECH SYNTHESIS ENGINE (TRADITIONAL CHINESE & ENGLISH)
     // =========================================================
-    function speak(text, onComplete = null) {
+    function speak(text, onComplete = null, forcedLang = null) {
       if (!('speechSynthesis' in window)) {
         if (onComplete) onComplete();
         return;
@@ -832,17 +906,31 @@
       synth.cancel();
 
       const utterance = new SpeechSynthesisUtterance(text);
-      // Slower rate (0.80) specifically for 7-year-old ESL learners
-      utterance.rate = 0.80;
-      utterance.pitch = 1.05;
+      const isZh = (forcedLang === 'zh') || (currentGameMode === 'multiplication_zh');
 
-      const voices = synth.getVoices();
-      const enVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Samantha')));
-      if (enVoice) {
-        utterance.voice = enVoice;
+      if (isZh) {
+        utterance.lang = 'zh-TW';
+        utterance.rate = 0.88;
+        utterance.pitch = 1.05;
+
+        const voices = synth.getVoices();
+        const zhVoice = voices.find(v => v.lang === 'zh-TW' || v.lang === 'zh-HK' || v.lang.startsWith('zh'));
+        if (zhVoice) {
+          utterance.voice = zhVoice;
+        }
       } else {
-        const anyEn = voices.find(v => v.lang.startsWith('en'));
-        if (anyEn) utterance.voice = anyEn;
+        utterance.lang = 'en-US';
+        utterance.rate = 0.80; // Slower rate for 7-year-old ESL learners
+        utterance.pitch = 1.05;
+
+        const voices = synth.getVoices();
+        const enVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Samantha')));
+        if (enVoice) {
+          utterance.voice = enVoice;
+        } else {
+          const anyEn = voices.find(v => v.lang.startsWith('en'));
+          if (anyEn) utterance.voice = anyEn;
+        }
       }
 
       utterance.onend = () => {
@@ -903,6 +991,14 @@
 
     async function launchGame() {
       await ensureSensorsAndAudio();
+      currentGameMode = 'english';
+      switchView('game');
+      initGameSession();
+    }
+
+    async function launchMultiplicationGame() {
+      await ensureSensorsAndAudio();
+      currentGameMode = 'multiplication_zh';
       switchView('game');
       initGameSession();
     }
@@ -910,26 +1006,22 @@
     async function launchTesting() {
       await ensureSensorsAndAudio();
       switchView('test');
-      speak("Testing mode. Tilt or shake your phone.");
+      speak("測試模式。請傾斜或搖動手機。", null, 'zh');
     }
 
     // =========================================================
-    // 6. GAME LOGIC (EXACT RATIO: Math 30%, Options 40%, Yes/No 30%)
+    // 6. GAME LOGIC (ENGLISH & 九九乘法 MODES)
     // =========================================================
     function initGameSession() {
-      // Create a 15-question round with the exact requested percentages:
-      // Math: 30% -> 5 questions
-      // Options (vocabulary/concept): 40% -> 6 questions
-      // Yes/No: 30% -> 4 questions
-      // (Total Option Questions = 5 Math + 6 Options = 11/15 = ~73.3% / 70%!)
-      // Exact requested percentages:
-      // Math Calculation: 30% -> 5 questions
-      // Concept & Vocabulary Options: 70% -> 10 questions
-      const selectedMath = shuffle(MATH_QUESTIONS).slice(0, 5);
-      const selectedOptions = shuffle(OPTION_QUESTIONS).slice(0, 10);
-
-      // Mix and shuffle all selected questions so every game feels fresh!
-      gameQuestions = shuffle([...selectedMath, ...selectedOptions]);
+      if (currentGameMode === 'multiplication_zh') {
+        // Pick 15 questions from the 40 MULTIPLICATION_QUESTIONS pool
+        gameQuestions = shuffle(MULTIPLICATION_QUESTIONS).slice(0, 15);
+      } else {
+        // ESL English mode: 30% math (5 questions), 70% options (10 questions)
+        const selectedMath = shuffle(MATH_QUESTIONS).slice(0, 5);
+        const selectedOptions = shuffle(OPTION_QUESTIONS).slice(0, 10);
+        gameQuestions = shuffle([...selectedMath, ...selectedOptions]);
+      }
 
       currentQuestionIndex = 0;
       gameScore = 0;
@@ -942,24 +1034,31 @@
     function presentCurrentQuestion() {
       if (currentQuestionIndex >= gameQuestions.length) {
         playRandomCelebrationSound();
-        speak(`Awesome job! You finished the game and earned ${gameScore} stars! Tap anywhere to play again.`);
+        if (currentGameMode === 'multiplication_zh') {
+          speak(`太棒了！你完成了所有乘法題目，總共得到 ${gameScore} 顆星星！點擊螢幕可以再玩一次喔。`);
+        } else {
+          speak(`Awesome job! You finished the game and earned ${gameScore} stars! Tap anywhere to play again.`);
+        }
         return;
       }
 
       const qObj = gameQuestions[currentQuestionIndex];
 
-      // Reset visual arrow states
       arrowLeft.className = "arrow-icon-wrapper left";
       arrowRight.className = "arrow-icon-wrapper right";
 
       isGameLocked = false;
 
-      // Speak question and the two options slowly with natural pauses
-      const fullSpeech = `${qObj.q} ... Left for ${qObj.left}, ... right for ${qObj.right}.`;
+      let fullSpeech = "";
+      if (currentGameMode === 'multiplication_zh') {
+        // e.g. "3乘以5等於？ ... 左邊：15， ... 右邊：20。"
+        fullSpeech = `${qObj.q} ... 左邊：${qObj.left}，... 右邊：${qObj.right}。`;
+      } else {
+        fullSpeech = `${qObj.q} ... Left for ${qObj.left}, ... right for ${qObj.right}.`;
+      }
       speak(fullSpeech);
     }
 
-    // Tap anywhere on the screen repeats the audio question
     function onGameScreenTap(event) {
       if (currentView !== 'game') return;
 
@@ -971,20 +1070,24 @@
       if (isGameLocked) return;
 
       const qObj = gameQuestions[currentQuestionIndex];
-      speak(`Listen again: ... ${qObj.q} ... Left for ${qObj.left}, ... right for ${qObj.right}.`);
+      let repeatSpeech = "";
+      if (currentGameMode === 'multiplication_zh') {
+        repeatSpeech = `再聽一次：${qObj.q} ... 左邊：${qObj.left}，... 右邊：${qObj.right}。`;
+      } else {
+        repeatSpeech = `Listen again: ... ${qObj.q} ... Left for ${qObj.left}, ... right for ${qObj.right}.`;
+      }
+      speak(repeatSpeech);
     }
 
-    // Evaluate answer triggered by Left or Right Tilt
-    function evaluateAnswer(userChoice) { // userChoice is 'left' or 'right'
+    function evaluateAnswer(userChoice) { // 'left' or 'right'
       if (isGameLocked || currentView !== 'game') return;
       if (currentQuestionIndex >= gameQuestions.length) return;
 
       const qObj = gameQuestions[currentQuestionIndex];
       const isCorrect = (userChoice === qObj.ans);
 
-      isGameLocked = true; // Lock until next question
+      isGameLocked = true;
 
-      // Visual flash on corresponding arrow
       if (userChoice === 'left') {
         arrowLeft.classList.add(isCorrect ? 'correct-flash' : 'wrong-flash');
       } else {
@@ -995,8 +1098,14 @@
         gameScore++;
         playRandomCelebrationSound();
 
-        const randomPraise = PRAISES[Math.floor(Math.random() * PRAISES.length)];
-        const confirmation = `${randomPraise} ... ${qObj.expl}`;
+        let confirmation = "";
+        if (currentGameMode === 'multiplication_zh') {
+          const randomPraise = PRAISES_ZH[Math.floor(Math.random() * PRAISES_ZH.length)];
+          confirmation = `${randomPraise} ... ${qObj.expl}`;
+        } else {
+          const randomPraise = PRAISES_EN[Math.floor(Math.random() * PRAISES_EN.length)];
+          confirmation = `${randomPraise} ... ${qObj.expl}`;
+        }
 
         setTimeout(() => {
           speak(confirmation, () => {
@@ -1010,8 +1119,10 @@
       } else {
         playTryAgainSound();
 
+        const retryMsg = (currentGameMode === 'multiplication_zh') ? "哎呀，再試一次看看！" : "Oops! ... Let's try again.";
+
         setTimeout(() => {
-          speak("Oops! ... Let's try again.", () => {
+          speak(retryMsg, () => {
             setTimeout(() => {
               arrowLeft.className = "arrow-icon-wrapper left";
               arrowRight.className = "arrow-icon-wrapper right";
@@ -1037,7 +1148,6 @@
         valBeta.textContent = beta.toFixed(1) + '°';
       }
 
-      // Check center return (bring phone upright between tilts)
       if (Math.abs(gamma) < 18) {
         hasReturnedToCenter = true;
         if (!isGameLocked) {
@@ -1052,11 +1162,11 @@
           if (gamma < -tiltAngleThreshold) {
             hasReturnedToCenter = false;
             arrowLeft.classList.add('active-tilt');
-            evaluateAnswer('left'); // Tilt Left
+            evaluateAnswer('left');
           } else if (gamma > tiltAngleThreshold) {
             hasReturnedToCenter = false;
             arrowRight.classList.add('active-tilt');
-            evaluateAnswer('right'); // Tilt Right
+            evaluateAnswer('right');
           }
         }
         return;
@@ -1066,7 +1176,7 @@
       if (currentView === 'test') {
         if (wasFaceDown && Math.abs(beta) < 60) {
           wasFaceDown = false;
-          triggerTestAction("Face Up!", "Flipped face up", "📱");
+          triggerTestAction("Face Up!", "翻回正面", "📱");
           return;
         }
 
@@ -1074,14 +1184,14 @@
 
         if (Math.abs(beta) > 135) {
           wasFaceDown = true;
-          triggerTestAction("Face Down!", "Flipped face down", "🔄");
+          triggerTestAction("Face Down!", "翻轉朝下", "🔄");
           return;
         }
 
         if (gamma < -tiltAngleThreshold) {
-          triggerTestAction("Tilt Left!", "Tilt left", "⬅️");
+          triggerTestAction("Tilt Left!", "向左傾斜", "⬅️");
         } else if (gamma > tiltAngleThreshold) {
-          triggerTestAction("Tilt Right!", "Tilt right", "➡️");
+          triggerTestAction("Tilt Right!", "向右傾斜", "➡️");
         }
       }
     }
@@ -1119,7 +1229,7 @@
         valGravZ.textContent = accGrav.z.toFixed(1);
         if (!isCoolingDown && !wasFaceDown && accGrav.z < -7 && Math.abs(accGrav.x || 0) < 4) {
           wasFaceDown = true;
-          triggerTestAction("Face Down!", "Flipped face down", "🔄");
+          triggerTestAction("Face Down!", "翻轉朝下", "🔄");
           return;
         }
       }
@@ -1127,9 +1237,9 @@
       if (isCoolingDown) return;
 
       if (x > SHAKE_THRESHOLD && x > y * 1.25) {
-        triggerTestAction("Shake Left & Right!", "Shake left and right", "📳");
+        triggerTestAction("Shake Left & Right!", "左右搖晃", "📳");
       } else if (y > SHAKE_THRESHOLD && y > x * 1.25) {
-        triggerTestAction("Shake Up & Down!", "Shake up and down", "↕️");
+        triggerTestAction("Shake Up & Down!", "上下擺動", "↕️");
       }
     }
 
@@ -1141,7 +1251,7 @@
       testMotionText.textContent = actionName;
       testDisplayCard.classList.add('active');
 
-      speak(speechVoice);
+      speak(speechVoice, null, 'zh');
 
       testCooldownBar.style.transition = 'none';
       testCooldownBar.style.width = '100%';
@@ -1193,7 +1303,11 @@
     }
 
     function testVoice() {
-      speak("Testing voice. How much is two plus three? Left for five, right for six.");
+      speak("Testing voice. How much is two plus three? Left for five, right for six.", null, 'en');
+    }
+
+    function testVoiceZh() {
+      speak("測試中文語音。3乘以5等於？左邊：15，右邊：20。", null, 'zh');
     }
 
     if ('speechSynthesis' in window) {
